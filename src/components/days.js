@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import React from 'react';
 import DayStore from '../stores/day.js';
+import Day from './day.js';
 
 
 var Days = React.createClass({
