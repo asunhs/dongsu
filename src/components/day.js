@@ -1,30 +1,26 @@
-import React from 'react'
+import React from 'react';
+import DayStore from '../stores/day.js';
+import DayAction from '../actions/day.js';
 
 
 var Day = React.createClass({
     getInitialState() {
         return {
-            workingHour: 8
+            day: DayStore.get(this.props.id)
         };
     },
     toggle() {
-        switch (this.state.workingHour) {
-            case 0:
-                return this.setState({workingHour: 4});
-            case 4:
-                return this.setState({workingHour: 8});
-            default :
-                return this.setState({workingHour: 0});
-        }
+        DayAction.toggle(this.props.id);
     },
     render() {
 
-        var disabled = !this.state.workingHour;
+        var day = this.state.day,
+            disabled = !day.workingHour;
 
         return (
             <tr>
                 <td><span className={ disabled ? 'disabled' : '' } onClick={this.toggle}>V</span></td>
-                <td>{this.props.date}</td>
+                <td>{day.date}</td>
                 <td><input type="time" disabled={disabled}/></td>
                 <td><input type="time" disabled={disabled}/></td>
             </tr>
