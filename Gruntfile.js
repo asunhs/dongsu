@@ -17,7 +17,7 @@ module.exports = function (grunt) {
         copy: {
             main: {
                 src: "src/index.html",
-                dest: "dist/index.html"
+                dest: "index.html"
             },
             css: {
                 src: "src/main.css",
