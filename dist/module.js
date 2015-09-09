@@ -29024,6 +29024,73 @@ module.exports = require('./lib/React');
 },{"./lib/React":30}],158:[function(require,module,exports){
 'use strict';
 
+exports.__esModule = true;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var Day = _react2['default'].createClass({
+    displayName: 'Day',
+
+    getInitialState: function getInitialState() {
+        return {
+            workingHour: 8
+        };
+    },
+    toggle: function toggle() {
+        switch (this.state.workingHour) {
+            case 0:
+                return this.setState({ workingHour: 4 });
+            case 4:
+                return this.setState({ workingHour: 8 });
+            default:
+                return this.setState({ workingHour: 0 });
+        }
+    },
+    render: function render() {
+
+        var disabled = !this.state.workingHour;
+
+        return _react2['default'].createElement(
+            'tr',
+            null,
+            _react2['default'].createElement(
+                'td',
+                null,
+                _react2['default'].createElement(
+                    'span',
+                    { className: disabled ? 'disabled' : '', onClick: this.toggle },
+                    'V'
+                )
+            ),
+            _react2['default'].createElement(
+                'td',
+                null,
+                this.props.date
+            ),
+            _react2['default'].createElement(
+                'td',
+                null,
+                _react2['default'].createElement('input', { type: 'time', disabled: disabled })
+            ),
+            _react2['default'].createElement(
+                'td',
+                null,
+                _react2['default'].createElement('input', { type: 'time', disabled: disabled })
+            )
+        );
+    }
+});
+
+exports['default'] = Day;
+module.exports = exports['default'];
+
+},{"react":157}],159:[function(require,module,exports){
+'use strict';
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var _jquery = require('jquery');
@@ -29033,6 +29100,10 @@ var _jquery2 = _interopRequireDefault(_jquery);
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _componentsDayJs = require('./components/day.js');
+
+var _componentsDayJs2 = _interopRequireDefault(_componentsDayJs);
 
 _jquery2['default'](document).ready(function () {
     return _react2['default'].render(_react2['default'].createElement(
@@ -29047,6 +29118,7 @@ _jquery2['default'](document).ready(function () {
                 _react2['default'].createElement(
                     'tr',
                     null,
+                    _react2['default'].createElement('th', null),
                     _react2['default'].createElement(
                         'th',
                         null,
@@ -29061,156 +29133,20 @@ _jquery2['default'](document).ready(function () {
                         'th',
                         null,
                         'End'
-                    ),
-                    _react2['default'].createElement('th', null)
+                    )
                 )
             ),
             _react2['default'].createElement(
                 'tbody',
                 null,
-                _react2['default'].createElement(
-                    'tr',
-                    null,
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        '9/11(Fri)'
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement('input', { type: 'time' })
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement('input', { type: 'time' })
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement(
-                            'button',
-                            null,
-                            'Set'
-                        )
-                    )
-                ),
-                _react2['default'].createElement(
-                    'tr',
-                    null,
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        '9/10(Thr)'
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement('input', { type: 'time' })
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement('input', { type: 'time' })
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement(
-                            'button',
-                            null,
-                            'Set'
-                        )
-                    )
-                ),
-                _react2['default'].createElement(
-                    'tr',
-                    null,
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        '9/9(Wed)'
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement('input', { type: 'time' })
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement('input', { type: 'time' })
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement(
-                            'button',
-                            null,
-                            'Set'
-                        )
-                    )
-                ),
-                _react2['default'].createElement(
-                    'tr',
-                    null,
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        '9/8(Tue)'
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement('input', { type: 'time' })
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement('input', { type: 'time' })
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement(
-                            'button',
-                            null,
-                            'Set'
-                        )
-                    )
-                ),
-                _react2['default'].createElement(
-                    'tr',
-                    null,
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        '9/7(Mon)'
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement('input', { type: 'time' })
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement('input', { type: 'time' })
-                    ),
-                    _react2['default'].createElement(
-                        'td',
-                        null,
-                        _react2['default'].createElement(
-                            'button',
-                            null,
-                            'Set'
-                        )
-                    )
-                )
+                _react2['default'].createElement(_componentsDayJs2['default'], { date: '9/12(Fri)' }),
+                _react2['default'].createElement(_componentsDayJs2['default'], { date: '9/11(Fri)' }),
+                _react2['default'].createElement(_componentsDayJs2['default'], { date: '9/10(Fri)' }),
+                _react2['default'].createElement(_componentsDayJs2['default'], { date: '9/9(Fri)' }),
+                _react2['default'].createElement(_componentsDayJs2['default'], { date: '9/8(Fri)' })
             )
         )
     ), document.body);
 });
 
-},{"jquery":2,"react":157}]},{},[158]);
+},{"./components/day.js":158,"jquery":2,"react":157}]},{},[159]);

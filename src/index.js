@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import React from 'react';
+import Day from './components/day.js';
 
 $(document).ready(function () {
     return React.render(
@@ -7,43 +8,18 @@ $(document).ready(function () {
             <table>
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Day</th>
                         <th>Start</th>
                         <th>End</th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>9/11(Fri)</td>
-                        <td><input type="time"/></td>
-                        <td><input type="time"/></td>
-                        <td><button>Set</button></td>
-                    </tr>
-                    <tr>
-                        <td>9/10(Thr)</td>
-                        <td><input type="time"/></td>
-                        <td><input type="time"/></td>
-                        <td><button>Set</button></td>
-                    </tr>
-                    <tr>
-                        <td>9/9(Wed)</td>
-                        <td><input type="time"/></td>
-                        <td><input type="time"/></td>
-                        <td><button>Set</button></td>
-                    </tr>
-                    <tr>
-                        <td>9/8(Tue)</td>
-                        <td><input type="time"/></td>
-                        <td><input type="time"/></td>
-                        <td><button>Set</button></td>
-                    </tr>
-                    <tr>
-                        <td>9/7(Mon)</td>
-                        <td><input type="time"/></td>
-                        <td><input type="time"/></td>
-                        <td><button>Set</button></td>
-                    </tr>
+                    <Day date="9/12(Fri)"/>
+                    <Day date="9/11(Fri)"/>
+                    <Day date="9/10(Fri)"/>
+                    <Day date="9/9(Fri)"/>
+                    <Day date="9/8(Fri)"/>
                 </tbody>
             </table>
         </div>,
