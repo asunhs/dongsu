@@ -31177,13 +31177,47 @@ module.exports = require('./lib/React');
 
 exports.__esModule = true;
 var Actions = {
-    DAY_TOGGLE: 'DAY_TOGGLE'
+    DAY_TOGGLE: 'DAY_TOGGLE',
+    DAY_CHANGE: 'DAY_CHANGE'
 };
 
 exports['default'] = Actions;
 module.exports = exports['default'];
 
 },{}],164:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _dispatcherJs = require('../dispatcher.js');
+
+var _dispatcherJs2 = _interopRequireDefault(_dispatcherJs);
+
+var _actionsJs = require('./actions.js');
+
+var _actionsJs2 = _interopRequireDefault(_actionsJs);
+
+var DayAction = {
+    toggle: function toggle(id) {
+        _dispatcherJs2['default'].dispatch({
+            type: _actionsJs2['default'].DAY_TOGGLE,
+            id: id
+        });
+    },
+    change: function change(day) {
+        _dispatcherJs2['default'].dispatch({
+            type: _actionsJs2['default'].DAY_CHANGE,
+            day: day
+        });
+    }
+};
+
+exports['default'] = DayAction;
+module.exports = exports['default'];
+
+},{"../dispatcher.js":168,"./actions.js":163}],165:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31202,52 +31236,170 @@ var _storesDayJs = require('../stores/day.js');
 
 var _storesDayJs2 = _interopRequireDefault(_storesDayJs);
 
-var Days = _react2['default'].createClass({
-    displayName: 'Days',
+var _utilsDateJs = require('../utils/date.js');
+
+var Dashboard = _react2['default'].createClass({
+    displayName: 'Dashboard',
+
+    getInitialState: function getInitialState() {
+        return {
+            total: _storesDayJs2['default'].getTotal()
+        };
+    },
+    componentDidMount: function componentDidMount() {
+        _storesDayJs2['default'].addChangeListener(this.update);
+    },
+    componentWillUnmount: function componentWillUnmount() {
+        _storesDayJs2['default'].removeChangeListener(this.update);
+    },
+    update: function update() {
+        this.setState({
+            total: _storesDayJs2['default'].getTotal()
+        });
+    },
 
     render: function render() {
-        return _underscore2['default'].map(_storesDayJs2['default'].getAll(), function (day) {
-            return _react2['default'].createElement(Day, { id: day.index });
-        });
+        return _react2['default'].createElement(
+            'div',
+            null,
+            'Total  ',
+            _utilsDateJs.getTimeString(this.state.total)
+        );
     }
 });
 
-exports['default'] = Days;
+exports['default'] = Dashboard;
 module.exports = exports['default'];
 
-},{"../stores/day.js":167,"react":161,"underscore":162}],165:[function(require,module,exports){
+},{"../stores/day.js":170,"../utils/date.js":171,"react":161,"underscore":162}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
 
-var _flux = require('flux');
-
-exports['default'] = new _flux.Dispatcher();
-module.exports = exports['default'];
-
-},{"flux":1}],166:[function(require,module,exports){
-'use strict';
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _jquery = require('jquery');
+var _underscore = require('underscore');
 
-var _jquery2 = _interopRequireDefault(_jquery);
+var _underscore2 = _interopRequireDefault(_underscore);
 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _componentsDaysJs = require('./components/days.js');
+var _storesDayJs = require('../stores/day.js');
 
-var _componentsDaysJs2 = _interopRequireDefault(_componentsDaysJs);
+var _storesDayJs2 = _interopRequireDefault(_storesDayJs);
 
-_jquery2['default'](document).ready(function () {
+var _actionsDayJs = require('../actions/day.js');
 
-    return _react2['default'].render(_react2['default'].createElement(
-        'div',
-        null,
-        _react2['default'].createElement(
+var _actionsDayJs2 = _interopRequireDefault(_actionsDayJs);
+
+var Day = _react2['default'].createClass({
+    displayName: 'Day',
+
+    getInitialState: function getInitialState() {
+        return _storesDayJs2['default'].get(this.props.id);
+    },
+    componentWillReceiveProps: function componentWillReceiveProps() {
+        this.setState(_storesDayJs2['default'].get(this.props.id));
+    },
+    toggle: function toggle() {
+        _actionsDayJs2['default'].toggle(this.props.id);
+    },
+    handleStart: function handleStart(event) {
+        _actionsDayJs2['default'].change(_underscore2['default'].extend({}, this.state, {
+            start: event.target.value
+        }));
+    },
+    handleEnd: function handleEnd(event) {
+        _actionsDayJs2['default'].change(_underscore2['default'].extend({}, this.state, {
+            end: event.target.value
+        }));
+    },
+    render: function render() {
+
+        var disabled = !this.state.workingHour;
+
+        return _react2['default'].createElement(
+            'tr',
+            null,
+            _react2['default'].createElement(
+                'td',
+                null,
+                _react2['default'].createElement(
+                    'span',
+                    { className: disabled ? 'disabled' : '', onClick: this.toggle },
+                    this.state.workingHour,
+                    'h'
+                )
+            ),
+            _react2['default'].createElement(
+                'td',
+                null,
+                this.state.date
+            ),
+            _react2['default'].createElement(
+                'td',
+                null,
+                _react2['default'].createElement('input', { type: 'time', disabled: disabled, value: this.state.start, onChange: this.handleStart })
+            ),
+            _react2['default'].createElement(
+                'td',
+                null,
+                _react2['default'].createElement('input', { type: 'time', disabled: disabled, value: this.state.end, onChange: this.handleEnd })
+            )
+        );
+    }
+});
+
+exports['default'] = Day;
+module.exports = exports['default'];
+
+},{"../actions/day.js":164,"../stores/day.js":170,"react":161,"underscore":162}],167:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _underscore = require('underscore');
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _storesDayJs = require('../stores/day.js');
+
+var _storesDayJs2 = _interopRequireDefault(_storesDayJs);
+
+var _dayJs = require('./day.js');
+
+var _dayJs2 = _interopRequireDefault(_dayJs);
+
+var Days = _react2['default'].createClass({
+    displayName: 'Days',
+
+    getInitialState: function getInitialState() {
+        return {
+            days: _storesDayJs2['default'].getAll()
+        };
+    },
+    componentDidMount: function componentDidMount() {
+        _storesDayJs2['default'].addChangeListener(this.update);
+    },
+    componentWillUnmount: function componentWillUnmount() {
+        _storesDayJs2['default'].removeChangeListener(this.update);
+    },
+    update: function update() {
+        this.setState({
+            days: _storesDayJs2['default'].getAll()
+        });
+    },
+
+    render: function render() {
+        return _react2['default'].createElement(
             'table',
             null,
             _react2['default'].createElement(
@@ -31277,13 +31429,59 @@ _jquery2['default'](document).ready(function () {
             _react2['default'].createElement(
                 'tbody',
                 null,
-                _react2['default'].createElement(_componentsDaysJs2['default'], null)
+                _underscore2['default'].map(this.state.days, function (day) {
+                    return _react2['default'].createElement(_dayJs2['default'], { key: day.index, id: day.index });
+                })
             )
-        )
+        );
+    }
+});
+
+exports['default'] = Days;
+module.exports = exports['default'];
+
+},{"../stores/day.js":170,"./day.js":166,"react":161,"underscore":162}],168:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+
+var _flux = require('flux');
+
+exports['default'] = new _flux.Dispatcher();
+module.exports = exports['default'];
+
+},{"flux":1}],169:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _jquery = require('jquery');
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _componentsDaysJs = require('./components/days.js');
+
+var _componentsDaysJs2 = _interopRequireDefault(_componentsDaysJs);
+
+var _componentsDashboardJs = require('./components/dashboard.js');
+
+var _componentsDashboardJs2 = _interopRequireDefault(_componentsDashboardJs);
+
+_jquery2['default'](document).ready(function () {
+
+    return _react2['default'].render(_react2['default'].createElement(
+        'div',
+        null,
+        _react2['default'].createElement(_componentsDashboardJs2['default'], null),
+        _react2['default'].createElement(_componentsDaysJs2['default'], null)
     ), document.body);
 });
 
-},{"./components/days.js":164,"jquery":6,"react":161}],167:[function(require,module,exports){
+},{"./components/dashboard.js":165,"./components/days.js":167,"jquery":6,"react":161}],170:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31304,7 +31502,9 @@ var _actionsActionsJs = require('../actions/actions.js');
 
 var _actionsActionsJs2 = _interopRequireDefault(_actionsActionsJs);
 
-var days = [{ index: 0, date: '9/7 (Mon)', workingHour: 8 }, { index: 1, date: '9/8 (Tue)', workingHour: 8 }, { index: 2, date: '9/9 (Wed)', workingHour: 8 }, { index: 3, date: '9/10 (Thr)', workingHour: 8 }, { index: 4, date: '9/11 (Fri)', workingHour: 8 }],
+var _utilsDateJs = require('../utils/date.js');
+
+var days = [{ index: 0, date: '9/7 (Mon)', workingHour: 8, start: '09:30', end: '18:30' }, { index: 1, date: '9/8 (Tue)', workingHour: 8, start: '09:30', end: '18:30' }, { index: 2, date: '9/9 (Wed)', workingHour: 8, start: '09:30', end: '18:30' }, { index: 3, date: '9/10 (Thr)', workingHour: 8, start: '09:30', end: '18:30' }, { index: 4, date: '9/11 (Fri)', workingHour: 8, start: '09:30', end: '18:30' }],
     DayStore = _underscore2['default'].extend({}, _events.EventEmitter.prototype, {
     emitChange: function emitChange() {
         this.emit('change');
@@ -31321,9 +31521,16 @@ var days = [{ index: 0, date: '9/7 (Mon)', workingHour: 8 }, { index: 1, date: '
     getAll: function getAll() {
         return days;
     },
+    getTotal: function getTotal() {
+        return _underscore2['default'].chain(days).map(function (day) {
+            return _utilsDateJs.getDiff(_utilsDateJs.getTime(day.start), _utilsDateJs.getTime(day.end));
+        }).reduce(function (sum, time) {
+            return sum + time;
+        }).value();
+    },
     dispatchToken: _dispatcherJs2['default'].register(function (action) {
         switch (action.type) {
-            case 'change':
+            case _actionsActionsJs2['default'].DAY_CHANGE:
                 {
                     var day = action.day;
                     days[day.index] = day;
@@ -31344,6 +31551,7 @@ var days = [{ index: 0, date: '9/7 (Mon)', workingHour: 8 }, { index: 1, date: '
                             day.workingHour = 0;
                     }
                     DayStore.emitChange();
+                    break;
                 }
         }
     })
@@ -31352,4 +31560,61 @@ var days = [{ index: 0, date: '9/7 (Mon)', workingHour: 8 }, { index: 1, date: '
 exports['default'] = DayStore;
 module.exports = exports['default'];
 
-},{"../actions/actions.js":163,"../dispatcher.js":165,"events":4,"underscore":162}]},{},[166]);
+},{"../actions/actions.js":163,"../dispatcher.js":168,"../utils/date.js":171,"events":4,"underscore":162}],171:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _underscore = require('underscore');
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+var DateUtils = {},
+    TIME = /^(\d{1,2}):(\d{1,2})$/;
+
+function timePadding(n) {
+    return (n > 9 ? '' : '0') + n;
+}
+
+function getTime(str) {
+    if (!str) {
+        return 0;
+    }
+
+    var matched = str.match(TIME);
+
+    if (!matched) {
+        return 0;
+    }
+
+    return parseInt(matched[1]) * 60 + parseInt(matched[2]);
+}
+
+function getTimeString(time) {
+    return timePadding(Math.floor(time / 60)) + ':' + timePadding(time % 60);
+}
+
+function getDiff(start, end) {
+    var diff = (end - start + 24 * 60) % (24 * 60);
+
+    if (diff >= 480) {
+        return diff - 60;
+    } else if (diff >= 270) {
+        return diff - 30;
+    } else if (diff >= 240) {
+        return 240;
+    } else {
+        return diff;
+    }
+}
+
+DateUtils.getTime = getTime;
+DateUtils.getTimeString = getTimeString;
+DateUtils.getDiff = getDiff;
+
+exports['default'] = DateUtils;
+module.exports = exports['default'];
+
+},{"underscore":162}]},{},[169]);

@@ -10,7 +10,7 @@ var DayAction = {
     },
     change(day) {
         Dispatcher.dispatch({
-            type: 'change',
+            type: Actions.DAY_CHANGE,
             day: day
         });
     }
