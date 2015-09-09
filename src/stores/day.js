@@ -31,6 +31,9 @@ var days = [
         getTotal() {
             return _.chain(days).map(day => getDiff(getTime(day.start), getTime(day.end))).reduce((sum, time) => sum + time).value();
         },
+        getFullWorkingHour() {
+            return _.chain(days).pluck('workingHour').reduce((sum, time) => sum + (time*60)).value();
+        },
         dispatchToken: Dispatcher.register((action) => {
             switch (action.type) {
                 case Actions.DAY_CHANGE: {

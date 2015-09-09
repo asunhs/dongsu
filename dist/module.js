@@ -31238,13 +31238,21 @@ var _storesDayJs2 = _interopRequireDefault(_storesDayJs);
 
 var _utilsDateJs = require('../utils/date.js');
 
+function getData() {
+    var total = _storesDayJs2['default'].getTotal(),
+        fulltime = _storesDayJs2['default'].getFullWorkingHour();
+
+    return {
+        total: total,
+        remain: Math.max(fulltime - total, 0)
+    };
+}
+
 var Dashboard = _react2['default'].createClass({
     displayName: 'Dashboard',
 
     getInitialState: function getInitialState() {
-        return {
-            total: _storesDayJs2['default'].getTotal()
-        };
+        return getData();
     },
     componentDidMount: function componentDidMount() {
         _storesDayJs2['default'].addChangeListener(this.update);
@@ -31253,17 +31261,25 @@ var Dashboard = _react2['default'].createClass({
         _storesDayJs2['default'].removeChangeListener(this.update);
     },
     update: function update() {
-        this.setState({
-            total: _storesDayJs2['default'].getTotal()
-        });
+        this.setState(getData());
     },
 
     render: function render() {
         return _react2['default'].createElement(
             'div',
             null,
-            'Total  ',
-            _utilsDateJs.getTimeString(this.state.total)
+            _react2['default'].createElement(
+                'p',
+                null,
+                'Total  ',
+                _utilsDateJs.getTimeString(this.state.total)
+            ),
+            _react2['default'].createElement(
+                'p',
+                null,
+                'Remain ',
+                _utilsDateJs.getTimeString(this.state.remain)
+            )
         );
     }
 });
@@ -31526,6 +31542,11 @@ var days = [{ index: 0, date: '9/7 (Mon)', workingHour: 8, start: '09:30', end: 
             return _utilsDateJs.getDiff(_utilsDateJs.getTime(day.start), _utilsDateJs.getTime(day.end));
         }).reduce(function (sum, time) {
             return sum + time;
+        }).value();
+    },
+    getFullWorkingHour: function getFullWorkingHour() {
+        return _underscore2['default'].chain(days).pluck('workingHour').reduce(function (sum, time) {
+            return sum + time * 60;
         }).value();
     },
     dispatchToken: _dispatcherJs2['default'].register(function (action) {

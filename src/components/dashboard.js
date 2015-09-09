@@ -4,11 +4,19 @@ import DayStore from '../stores/day.js';
 import {getTimeString} from '../utils/date.js';
 
 
+function getData() {
+    var total = DayStore.getTotal(),
+        fulltime = DayStore.getFullWorkingHour();
+
+    return {
+        total: total,
+        remain: Math.max(fulltime - total, 0)
+    };
+}
+
 var Dashboard = React.createClass({
     getInitialState() {
-        return {
-            total: DayStore.getTotal()
-        };
+        return getData();
     },
     componentDidMount() {
         DayStore.addChangeListener(this.update);
@@ -17,14 +25,15 @@ var Dashboard = React.createClass({
         DayStore.removeChangeListener(this.update);
     },
     update() {
-        this.setState({
-            total: DayStore.getTotal()
-        });
+        this.setState(getData());
     },
 
     render() {
         return (
-            <div>Total  {getTimeString(this.state.total)}</div>
+            <div>
+                <p>Total  {getTimeString(this.state.total)}</p>
+                <p>Remain {getTimeString(this.state.remain)}</p>
+            </div>
         );
     }
 });
