@@ -1,16 +1,8 @@
-import _ from 'underscore';
 import $ from 'jquery';
 import React from 'react';
-import Day from './components/day.js';
-import DayStore from './stores/day.js';
+import Days from './components/days.js';
 
 $(document).ready(function () {
-
-    function getDays() {
-        return _.map(DayStore.getAll(), (day) => {
-            return <Day id={day.index}/>
-        });
-    }
 
     return React.render(
         <div>
@@ -23,7 +15,9 @@ $(document).ready(function () {
                         <th>End</th>
                     </tr>
                 </thead>
-                <tbody>{ getDays() }</tbody>
+                <tbody>
+                    <Days />
+                </tbody>
             </table>
         </div>,
         document.body
