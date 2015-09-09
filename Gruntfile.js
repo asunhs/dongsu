@@ -20,7 +20,7 @@ module.exports = function (grunt) {
                 dest: "dist/index.html"
             },
             css: {
-                src: "src/css/main.css",
+                src: "src/main.css",
                 dest: "dist/main.css"
             }
         },
