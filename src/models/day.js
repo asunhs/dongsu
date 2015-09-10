@@ -18,7 +18,7 @@ class Day {
 
         var diff = time.getTime() - now.getTime();
 
-        this.date = month + '/' + date;
+        this.date = time.getTime();
         this.workingHour = 8;
 
         if (diff > 0) {
@@ -48,6 +48,10 @@ class Day {
                 this.workingHour = 0;
                 break;
         }
+    }
+    getDateString() {
+        var date = new Date(this.date);
+        return (date.getMonth() + 1) + '/' + date.getDate();
     }
     getWorkingMinute() {
         return this.workingHour * 60;

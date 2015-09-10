@@ -31,6 +31,18 @@ function getDiff(start, end) {
     return (end - start + (24 * 60)) % (24 * 60);
 }
 
+function getCurrentWeek() {
+    var today = new Date(),
+        date = today.getDate(),
+        day = today.getDay();
+
+    return _.map([5,4,3,2,1], i => {
+        var d = new Date()
+        d.setDate(date - day + i);
+        return d;
+    });
+}
+
 
 DateUtils.getTime = getTime;
 DateUtils.getTimeString = getTimeString;

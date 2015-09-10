@@ -42,7 +42,7 @@ var Day = React.createClass({
 
         return (
             <tr>
-                <td>{day.date}</td>
+                <td>{day.getDateString()}</td>
                 <td><input type="time" disabled={disabled} value={day.start} onChange={this.handleStart}/></td>
                 <td><input type="time" disabled={disabled} value={day.end} onChange={this.handleEnd}/></td>
                 <td>{getTimeString(day.getWorkedTime())}</td>

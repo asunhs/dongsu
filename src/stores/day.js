@@ -2,9 +2,13 @@ import _ from 'underscore';
 import Dispatcher from '../dispatcher.js';
 import {EventEmitter} from 'events';
 import Actions from '../actions/actions.js';
-import {getTime, getDiff} from '../utils/date.js';
+import {getTime, getDiff, getCurrentWeek} from '../utils/date.js';
 import Day from '../models/day.js'
+import DayStorage from '../storages/days.js';
 
+console.log(getCurrentWeek());
+
+//var days = _.map(getCurrentWeek(), date => new Day(date));
 
 var days = [
         new Day(new Date(2015, 8, 11), '09:00', '18:00'),
