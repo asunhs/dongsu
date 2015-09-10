@@ -31240,11 +31240,14 @@ var _utilsDateJs = require('../utils/date.js');
 
 function getData() {
     var total = _storesDayJs2['default'].getTotal(),
-        fulltime = _storesDayJs2['default'].getFullWorkingHour();
+        fulltime = _storesDayJs2['default'].getFullWorkingHour(),
+        today = _storesDayJs2['default'].getToday();
 
     return {
         total: total,
-        remain: Math.max(fulltime - total, 0)
+        remain: Math.max(fulltime - total, 0),
+        today: today.getWorkedTime(),
+        light: today.getTrafficLight()
     };
 }
 
@@ -31271,7 +31274,7 @@ var Dashboard = _react2['default'].createClass({
             _react2['default'].createElement(
                 'p',
                 null,
-                'Total  ',
+                'Total ',
                 _utilsDateJs.getTimeString(this.state.total)
             ),
             _react2['default'].createElement(
@@ -31279,6 +31282,18 @@ var Dashboard = _react2['default'].createClass({
                 null,
                 'Remain ',
                 _utilsDateJs.getTimeString(this.state.remain)
+            ),
+            _react2['default'].createElement(
+                'p',
+                null,
+                'Today ',
+                _utilsDateJs.getTimeString(this.state.today)
+            ),
+            _react2['default'].createElement(
+                'p',
+                null,
+                'Light ',
+                this.state.light
             )
         );
     }
@@ -31287,7 +31302,7 @@ var Dashboard = _react2['default'].createClass({
 exports['default'] = Dashboard;
 module.exports = exports['default'];
 
-},{"../stores/day.js":170,"../utils/date.js":171,"react":161,"underscore":162}],166:[function(require,module,exports){
+},{"../stores/day.js":171,"../utils/date.js":172,"react":161,"underscore":162}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31314,27 +31329,36 @@ var Day = _react2['default'].createClass({
     displayName: 'Day',
 
     getInitialState: function getInitialState() {
-        return _storesDayJs2['default'].get(this.props.id);
+        return {
+            day: _storesDayJs2['default'].get(this.props.id)
+        };
     },
     componentWillReceiveProps: function componentWillReceiveProps() {
-        this.setState(_storesDayJs2['default'].get(this.props.id));
+        this.setState({
+            day: _storesDayJs2['default'].get(this.props.id)
+        });
     },
     toggle: function toggle() {
         _actionsDayJs2['default'].toggle(this.props.id);
     },
     handleStart: function handleStart(event) {
-        _actionsDayJs2['default'].change(_underscore2['default'].extend({}, this.state, {
-            start: event.target.value
-        }));
+        _actionsDayJs2['default'].change({
+            id: this.props.id,
+            start: event.target.value,
+            end: this.state.day.end
+        });
     },
     handleEnd: function handleEnd(event) {
-        _actionsDayJs2['default'].change(_underscore2['default'].extend({}, this.state, {
+        _actionsDayJs2['default'].change({
+            id: this.props.id,
+            start: this.state.day.start,
             end: event.target.value
-        }));
+        });
     },
     render: function render() {
 
-        var disabled = !this.state.workingHour;
+        var day = this.state.day,
+            disabled = !day.workingHour;
 
         return _react2['default'].createElement(
             'tr',
@@ -31345,24 +31369,29 @@ var Day = _react2['default'].createClass({
                 _react2['default'].createElement(
                     'span',
                     { className: disabled ? 'disabled' : '', onClick: this.toggle },
-                    this.state.workingHour,
+                    day.workingHour,
                     'h'
                 )
             ),
             _react2['default'].createElement(
                 'td',
                 null,
-                this.state.date
+                day.date
             ),
             _react2['default'].createElement(
                 'td',
                 null,
-                _react2['default'].createElement('input', { type: 'time', disabled: disabled, value: this.state.start, onChange: this.handleStart })
+                _react2['default'].createElement('input', { type: 'time', disabled: disabled, value: day.start, onChange: this.handleStart })
             ),
             _react2['default'].createElement(
                 'td',
                 null,
-                _react2['default'].createElement('input', { type: 'time', disabled: disabled, value: this.state.end, onChange: this.handleEnd })
+                _react2['default'].createElement('input', { type: 'time', disabled: disabled, value: day.end, onChange: this.handleEnd })
+            ),
+            _react2['default'].createElement(
+                'td',
+                null,
+                day.getOvertimeLevel()
             )
         );
     }
@@ -31371,7 +31400,7 @@ var Day = _react2['default'].createClass({
 exports['default'] = Day;
 module.exports = exports['default'];
 
-},{"../actions/day.js":164,"../stores/day.js":170,"react":161,"underscore":162}],167:[function(require,module,exports){
+},{"../actions/day.js":164,"../stores/day.js":171,"react":161,"underscore":162}],167:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31439,14 +31468,15 @@ var Days = _react2['default'].createClass({
                         'th',
                         null,
                         'End'
-                    )
+                    ),
+                    _react2['default'].createElement('th', null)
                 )
             ),
             _react2['default'].createElement(
                 'tbody',
                 null,
-                _underscore2['default'].map(this.state.days, function (day) {
-                    return _react2['default'].createElement(_dayJs2['default'], { key: day.index, id: day.index });
+                _underscore2['default'].map(this.state.days, function (day, index) {
+                    return _react2['default'].createElement(_dayJs2['default'], { key: index, id: index });
                 })
             )
         );
@@ -31456,7 +31486,7 @@ var Days = _react2['default'].createClass({
 exports['default'] = Days;
 module.exports = exports['default'];
 
-},{"../stores/day.js":170,"./day.js":166,"react":161,"underscore":162}],168:[function(require,module,exports){
+},{"../stores/day.js":171,"./day.js":166,"react":161,"underscore":162}],168:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31504,6 +31534,131 @@ exports.__esModule = true;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _underscore = require('underscore');
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+var _utilsDateJs = require('../utils/date.js');
+
+var week = [' (Sun)', ' (Mon)', ' (Tue)', ' (Wed)', ' (Thr)', ' (Fri)', ' (Sat)'];
+
+var Day = (function () {
+    function Day(t, start, end) {
+        _classCallCheck(this, Day);
+
+        var time = !t ? new Date() : new Date(t),
+            month = time.getMonth() + 1,
+            date = time.getDate(),
+            day = time.getDay(),
+            now = new Date();
+
+        time.setHours(0, 0, 0, 0);
+        now.setHours(0, 0, 0, 0);
+
+        var diff = time.getTime() - now.getTime();
+
+        this.date = month + '/' + date + week[day];
+        this.workingHour = 8;
+        this.start = start;
+        this.end = end;
+
+        if (diff > 0) {
+            this.state = Day.NOT_YET;
+            this.today = false;
+        } else if (diff < 0) {
+            this.state = Day.RECODED;
+            this.today = false;
+        } else {
+            this.state = Day.RECODING;
+            this.today = true;
+        }
+    }
+
+    Day.prototype.toggleWorkingHour = function toggleWorkingHour() {
+        switch (this.workingHour) {
+            case 0:
+                this.workingHour = 4;
+                break;
+            case 4:
+                this.workingHour = 8;
+                break;
+            default:
+                this.workingHour = 0;
+                break;
+        }
+    };
+
+    Day.prototype.getWorkingMinute = function getWorkingMinute() {
+        return this.workingHour * 60;
+    };
+
+    Day.prototype.getDiff = function getDiff() {
+        return _utilsDateJs.getDiff(_utilsDateJs.getTime(this.start), _utilsDateJs.getTime(this.end));
+    };
+
+    Day.prototype.getWorkedTime = function getWorkedTime() {
+        var diff = this.getDiff();
+
+        if (diff >= 480) {
+            return diff - 60;
+        } else if (diff >= 270) {
+            return diff - 30;
+        } else if (diff >= 240) {
+            return 240;
+        } else {
+            return diff;
+        }
+    };
+
+    Day.prototype.getTrafficLight = function getTrafficLight() {
+        var diff = this.getDiff();
+
+        if (diff >= 480) {
+            return Day.RED;
+        } else if (diff >= 450) {
+            return Day.YELLOW;
+        } else {
+            return Day.GREEN;
+        }
+    };
+
+    Day.prototype.getOvertimeLevel = function getOvertimeLevel() {
+        var diff = this.getDiff();
+
+        if (diff >= 900) {
+            return 3;
+        } else if (diff >= 780) {
+            return 2;
+        } else if (diff >= 660) {
+            return 1;
+        } else {
+            return 0;
+        }
+    };
+
+    return Day;
+})();
+
+Day.NOT_YET = 'NOT_YET';
+Day.RECODING = 'RECODING';
+Day.RECODED = 'RECODED';
+
+Day.GREEN = 'GREEN';
+Day.YELLOW = 'YELLOW';
+Day.RED = 'RED';
+
+exports['default'] = Day;
+module.exports = exports['default'];
+
+},{"../utils/date.js":172,"underscore":162}],171:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
 var _underscore = require('underscore');
 
 var _underscore2 = _interopRequireDefault(_underscore);
@@ -31520,7 +31675,11 @@ var _actionsActionsJs2 = _interopRequireDefault(_actionsActionsJs);
 
 var _utilsDateJs = require('../utils/date.js');
 
-var days = [{ index: 0, date: '9/7 (Mon)', workingHour: 8, start: '09:30', end: '18:30' }, { index: 1, date: '9/8 (Tue)', workingHour: 8, start: '09:30', end: '18:30' }, { index: 2, date: '9/9 (Wed)', workingHour: 8, start: '09:30', end: '18:30' }, { index: 3, date: '9/10 (Thr)', workingHour: 8, start: '09:30', end: '18:30' }, { index: 4, date: '9/11 (Fri)', workingHour: 8, start: '09:30', end: '18:30' }],
+var _modelsDayJs = require('../models/day.js');
+
+var _modelsDayJs2 = _interopRequireDefault(_modelsDayJs);
+
+var days = [new _modelsDayJs2['default'](new Date(2015, 8, 11), '09:00', '18:00'), new _modelsDayJs2['default'](new Date(2015, 8, 10), '09:00', '18:00'), new _modelsDayJs2['default'](new Date(2015, 8, 9), '09:00', '20:00'), new _modelsDayJs2['default'](new Date(2015, 8, 8), '09:00', '22:00'), new _modelsDayJs2['default'](new Date(2015, 8, 7), '09:00', '00:00')],
     DayStore = _underscore2['default'].extend({}, _events.EventEmitter.prototype, {
     emitChange: function emitChange() {
         this.emit('change');
@@ -31538,39 +31697,36 @@ var days = [{ index: 0, date: '9/7 (Mon)', workingHour: 8, start: '09:30', end: 
         return days;
     },
     getTotal: function getTotal() {
-        return _underscore2['default'].chain(days).map(function (day) {
-            return _utilsDateJs.getDiff(_utilsDateJs.getTime(day.start), _utilsDateJs.getTime(day.end));
-        }).reduce(function (sum, time) {
-            return sum + time;
-        }).value();
+        return _underscore2['default'].chain(days).filter(function (day) {
+            return day.state != _modelsDayJs2['default'].NOT_YET;
+        }).reduce(function (sum, day) {
+            return sum + day.getWorkedTime();
+        }, 0).value();
     },
     getFullWorkingHour: function getFullWorkingHour() {
-        return _underscore2['default'].chain(days).pluck('workingHour').reduce(function (sum, time) {
-            return sum + time * 60;
-        }).value();
+        return _underscore2['default'].reduce(days, function (sum, day) {
+            return sum + day.getWorkingMinute();
+        }, 0);
+    },
+    getToday: function getToday() {
+        return _underscore2['default'].findWhere(days, {
+            today: true
+        });
     },
     dispatchToken: _dispatcherJs2['default'].register(function (action) {
         switch (action.type) {
             case _actionsActionsJs2['default'].DAY_CHANGE:
                 {
-                    var day = action.day;
-                    days[day.index] = day;
+                    var newDay = action.day,
+                        oldDay = days[newDay.id];
+                    oldDay.start = newDay.start;
+                    oldDay.end = newDay.end;
                     DayStore.emitChange();
                     break;
                 }
             case _actionsActionsJs2['default'].DAY_TOGGLE:
                 {
-                    var day = days[action.id];
-                    switch (day.workingHour) {
-                        case 0:
-                            day.workingHour = 4;
-                            break;
-                        case 4:
-                            day.workingHour = 8;
-                            break;
-                        default:
-                            day.workingHour = 0;
-                    }
+                    days[action.id].toggleWorkingHour();
                     DayStore.emitChange();
                     break;
                 }
@@ -31581,7 +31737,7 @@ var days = [{ index: 0, date: '9/7 (Mon)', workingHour: 8, start: '09:30', end: 
 exports['default'] = DayStore;
 module.exports = exports['default'];
 
-},{"../actions/actions.js":163,"../dispatcher.js":168,"../utils/date.js":171,"events":4,"underscore":162}],171:[function(require,module,exports){
+},{"../actions/actions.js":163,"../dispatcher.js":168,"../models/day.js":170,"../utils/date.js":172,"events":4,"underscore":162}],172:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31618,17 +31774,7 @@ function getTimeString(time) {
 }
 
 function getDiff(start, end) {
-    var diff = (end - start + 24 * 60) % (24 * 60);
-
-    if (diff >= 480) {
-        return diff - 60;
-    } else if (diff >= 270) {
-        return diff - 30;
-    } else if (diff >= 240) {
-        return 240;
-    } else {
-        return diff;
-    }
+    return (end - start + 24 * 60) % (24 * 60);
 }
 
 DateUtils.getTime = getTime;

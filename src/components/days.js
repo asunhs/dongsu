@@ -31,12 +31,13 @@ var Days = React.createClass({
                         <th>Day</th>
                         <th>Start</th>
                         <th>End</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                 {
-                    _.map(this.state.days, (day) => {
-                        return <Day key={day.index} id={day.index}/>
+                    _.map(this.state.days, (day, index) => {
+                        return <Day key={index} id={index}/>
                     })
                 }
                 </tbody>

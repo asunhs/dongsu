@@ -3,14 +3,15 @@ import Dispatcher from '../dispatcher.js';
 import {EventEmitter} from 'events';
 import Actions from '../actions/actions.js';
 import {getTime, getDiff} from '../utils/date.js';
+import Day from '../models/day.js'
 
 
 var days = [
-        { index: 0, date: '9/7 (Mon)', workingHour: 8, start: '09:30', end: '18:30' },
-        { index: 1, date: '9/8 (Tue)', workingHour: 8, start: '09:30', end: '18:30' },
-        { index: 2, date: '9/9 (Wed)', workingHour: 8, start: '09:30', end: '18:30' },
-        { index: 3, date: '9/10 (Thr)', workingHour: 8, start: '09:30', end: '18:30' },
-        { index: 4, date: '9/11 (Fri)', workingHour: 8, start: '09:30', end: '18:30' }
+        new Day(new Date(2015, 8, 11), '09:00', '18:00'),
+        new Day(new Date(2015, 8, 10), '09:00', '18:00'),
+        new Day(new Date(2015, 8, 9), '09:00', '20:00'),
+        new Day(new Date(2015, 8, 8), '09:00', '22:00'),
+        new Day(new Date(2015, 8, 7), '09:00', '00:00')
     ],
     DayStore = _.extend({}, EventEmitter.prototype, {
         emitChange() {
@@ -29,31 +30,28 @@ var days = [
             return days;
         },
         getTotal() {
-            return _.chain(days).map(day => getDiff(getTime(day.start), getTime(day.end))).reduce((sum, time) => sum + time).value();
+            return _.chain(days).filter(day => day.state != Day.NOT_YET).reduce((sum, day) => sum + day.getWorkedTime(), 0).value();
         },
         getFullWorkingHour() {
-            return _.chain(days).pluck('workingHour').reduce((sum, time) => sum + (time*60)).value();
+            return _.reduce(days, (sum, day) => sum + day.getWorkingMinute(), 0);
+        },
+        getToday() {
+            return _.findWhere(days, {
+                today: true
+            });
         },
         dispatchToken: Dispatcher.register((action) => {
             switch (action.type) {
                 case Actions.DAY_CHANGE: {
-                    let day = action.day;
-                    days[day.index] = day;
+                    let newDay = action.day,
+                        oldDay = days[newDay.id];
+                    oldDay.start = newDay.start;
+                    oldDay.end = newDay.end;
                     DayStore.emitChange();
                     break;
                 }
                 case Actions.DAY_TOGGLE: {
-                    let day = days[action.id];
-                    switch (day.workingHour) {
-                        case 0:
-                            day.workingHour = 4;
-                            break;
-                        case 4:
-                            day.workingHour = 8;
-                            break;
-                        default:
-                            day.workingHour = 0;
-                    }
+                    days[action.id].toggleWorkingHour();
                     DayStore.emitChange();
                     break;
                 }

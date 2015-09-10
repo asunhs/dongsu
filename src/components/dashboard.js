@@ -6,11 +6,14 @@ import {getTimeString} from '../utils/date.js';
 
 function getData() {
     var total = DayStore.getTotal(),
-        fulltime = DayStore.getFullWorkingHour();
+        fulltime = DayStore.getFullWorkingHour(),
+        today = DayStore.getToday();
 
     return {
         total: total,
-        remain: Math.max(fulltime - total, 0)
+        remain: Math.max(fulltime - total, 0),
+        today: today.getWorkedTime(),
+        light: today.getTrafficLight()
     };
 }
 
@@ -31,8 +34,10 @@ var Dashboard = React.createClass({
     render() {
         return (
             <div>
-                <p>Total  {getTimeString(this.state.total)}</p>
+                <p>Total {getTimeString(this.state.total)}</p>
                 <p>Remain {getTimeString(this.state.remain)}</p>
+                <p>Today {getTimeString(this.state.today)}</p>
+                <p>Light {this.state.light}</p>
             </div>
         );
     }
