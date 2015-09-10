@@ -31245,6 +31245,7 @@ function getData() {
 
     return {
         total: total,
+        fulltime: fulltime,
         remain: Math.max(fulltime - total, 0),
         today: today.getWorkedTime(),
         light: today.getTrafficLight()
@@ -31271,6 +31272,12 @@ var Dashboard = _react2['default'].createClass({
         return _react2['default'].createElement(
             'div',
             null,
+            _react2['default'].createElement(
+                'p',
+                null,
+                'FullTime ',
+                _utilsDateJs.getTimeString(this.state.fulltime)
+            ),
             _react2['default'].createElement(
                 'p',
                 null,
@@ -31338,7 +31345,8 @@ var Day = _react2['default'].createClass({
             day: _storesDayJs2['default'].get(this.props.id)
         });
     },
-    toggle: function toggle() {
+    toggle: function toggle(event) {
+        event.preventDefault();
         _actionsDayJs2['default'].toggle(this.props.id);
     },
     handleStart: function handleStart(event) {

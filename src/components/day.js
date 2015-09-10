@@ -15,7 +15,8 @@ var Day = React.createClass({
             day: DayStore.get(this.props.id)
         });
     },
-    toggle() {
+    toggle(event) {
+        event.preventDefault();
         DayAction.toggle(this.props.id);
     },
     handleStart(event) {

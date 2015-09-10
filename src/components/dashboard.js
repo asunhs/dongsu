@@ -11,6 +11,7 @@ function getData() {
 
     return {
         total: total,
+        fulltime: fulltime,
         remain: Math.max(fulltime - total, 0),
         today: today.getWorkedTime(),
         light: today.getTrafficLight()
@@ -34,6 +35,7 @@ var Dashboard = React.createClass({
     render() {
         return (
             <div>
+                <p>FullTime {getTimeString(this.state.fulltime)}</p>
                 <p>Total {getTimeString(this.state.total)}</p>
                 <p>Remain {getTimeString(this.state.remain)}</p>
                 <p>Today {getTimeString(this.state.today)}</p>
