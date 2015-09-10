@@ -2,6 +2,7 @@ import _ from 'underscore';
 import React from 'react';
 import DayStore from '../stores/day.js';
 import DayAction from '../actions/day.js';
+import {getTimeString} from '../utils/date.js';
 
 
 var Day = React.createClass({
@@ -36,15 +37,16 @@ var Day = React.createClass({
     render() {
 
         var day = this.state.day,
-            disabled = !day.workingHour;
+            disabled = !day.workingHour || day.isNotYet(),
+            overtimeLevel = day.getOvertimeLevel();
 
         return (
             <tr>
-                <td><span className={ disabled ? 'disabled' : '' } onClick={this.toggle} onTouchStart={this.toggle}>{day.workingHour}h</span></td>
                 <td>{day.date}</td>
                 <td><input type="time" disabled={disabled} value={day.start} onChange={this.handleStart}/></td>
                 <td><input type="time" disabled={disabled} value={day.end} onChange={this.handleEnd}/></td>
-                <td>{day.getOvertimeLevel()}</td>
+                <td>{getTimeString(day.getWorkedTime())}</td>
+                <td><span className={ disabled ? 'disabled' : '' } onClick={this.toggle} onTouchStart={this.toggle}>{day.workingHour}h</span>{overtimeLevel ? '+' + (overtimeLevel * 2) +'h' : ''}</td>
             </tr>
         );
     }

@@ -30,7 +30,7 @@ var days = [
             return days;
         },
         getTotal() {
-            return _.chain(days).filter(day => day.state != Day.NOT_YET).reduce((sum, day) => sum + day.getWorkedTime(), 0).value();
+            return _.reduce(days, (sum, day) => sum + day.getWorkedTime(), 0);
         },
         getFullWorkingHour() {
             return _.reduce(days, (sum, day) => sum + day.getWorkingMinute(), 0);

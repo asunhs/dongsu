@@ -24,14 +24,14 @@ var Days = React.createClass({
 
     render() {
         return (
-            <table>
+            <table className="timetable">
                 <thead>
                     <tr>
-                        <th></th>
                         <th>Day</th>
                         <th>Start</th>
                         <th>End</th>
-                        <th></th>
+                        <th>Worked</th>
+                        <th>Mode</th>
                     </tr>
                 </thead>
                 <tbody>

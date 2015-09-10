@@ -18,19 +18,21 @@ class Day {
 
         var diff = time.getTime() - now.getTime();
 
-        this.date = month + '/' + date + week[day];
+        this.date = month + '/' + date;
         this.workingHour = 8;
-        this.start = start;
-        this.end = end;
 
         if (diff > 0) {
             this.state = Day.NOT_YET;
             this.today = false;
         } else if (diff < 0) {
             this.state = Day.RECODED;
+            this.start = start;
+            this.end = end;
             this.today = false;
         } else {
             this.state = Day.RECODING;
+            this.start = start;
+            this.end = end;
             this.today = true;
         }
     }
@@ -51,6 +53,12 @@ class Day {
         return this.workingHour * 60;
     }
     getDiff() {
+        if (this.isNotYet()) {
+            return 0;
+        }
+        if (!this.workingHour) {
+            return 0;
+        }
         return getDiff(getTime(this.start), getTime(this.end));
     }
     getWorkedTime() {
@@ -78,6 +86,11 @@ class Day {
         }
     }
     getOvertimeLevel() {
+
+        if (this.workingHour < 8) {
+            return 0;
+        }
+
         var diff = this.getDiff();
 
         if (diff >= 900) {
@@ -89,6 +102,9 @@ class Day {
         } else {
             return 0;
         }
+    }
+    isNotYet() {
+        return this.state == Day.NOT_YET;
     }
 }
 

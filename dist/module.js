@@ -31332,6 +31332,8 @@ var _actionsDayJs = require('../actions/day.js');
 
 var _actionsDayJs2 = _interopRequireDefault(_actionsDayJs);
 
+var _utilsDateJs = require('../utils/date.js');
+
 var Day = _react2['default'].createClass({
     displayName: 'Day',
 
@@ -31366,21 +31368,12 @@ var Day = _react2['default'].createClass({
     render: function render() {
 
         var day = this.state.day,
-            disabled = !day.workingHour;
+            disabled = !day.workingHour || day.isNotYet(),
+            overtimeLevel = day.getOvertimeLevel();
 
         return _react2['default'].createElement(
             'tr',
             null,
-            _react2['default'].createElement(
-                'td',
-                null,
-                _react2['default'].createElement(
-                    'span',
-                    { className: disabled ? 'disabled' : '', onClick: this.toggle, onTouchStart: this.toggle },
-                    day.workingHour,
-                    'h'
-                )
-            ),
             _react2['default'].createElement(
                 'td',
                 null,
@@ -31399,7 +31392,18 @@ var Day = _react2['default'].createClass({
             _react2['default'].createElement(
                 'td',
                 null,
-                day.getOvertimeLevel()
+                _utilsDateJs.getTimeString(day.getWorkedTime())
+            ),
+            _react2['default'].createElement(
+                'td',
+                null,
+                _react2['default'].createElement(
+                    'span',
+                    { className: disabled ? 'disabled' : '', onClick: this.toggle, onTouchStart: this.toggle },
+                    day.workingHour,
+                    'h'
+                ),
+                overtimeLevel ? '+' + overtimeLevel * 2 + 'h' : ''
             )
         );
     }
@@ -31408,7 +31412,7 @@ var Day = _react2['default'].createClass({
 exports['default'] = Day;
 module.exports = exports['default'];
 
-},{"../actions/day.js":164,"../stores/day.js":171,"react":161,"underscore":162}],167:[function(require,module,exports){
+},{"../actions/day.js":164,"../stores/day.js":171,"../utils/date.js":172,"react":161,"underscore":162}],167:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31454,14 +31458,13 @@ var Days = _react2['default'].createClass({
     render: function render() {
         return _react2['default'].createElement(
             'table',
-            null,
+            { className: 'timetable' },
             _react2['default'].createElement(
                 'thead',
                 null,
                 _react2['default'].createElement(
                     'tr',
                     null,
-                    _react2['default'].createElement('th', null),
                     _react2['default'].createElement(
                         'th',
                         null,
@@ -31477,7 +31480,16 @@ var Days = _react2['default'].createClass({
                         null,
                         'End'
                     ),
-                    _react2['default'].createElement('th', null)
+                    _react2['default'].createElement(
+                        'th',
+                        null,
+                        'Worked'
+                    ),
+                    _react2['default'].createElement(
+                        'th',
+                        null,
+                        'Mode'
+                    )
                 )
             ),
             _react2['default'].createElement(
@@ -31567,19 +31579,21 @@ var Day = (function () {
 
         var diff = time.getTime() - now.getTime();
 
-        this.date = month + '/' + date + week[day];
+        this.date = month + '/' + date;
         this.workingHour = 8;
-        this.start = start;
-        this.end = end;
 
         if (diff > 0) {
             this.state = Day.NOT_YET;
             this.today = false;
         } else if (diff < 0) {
             this.state = Day.RECODED;
+            this.start = start;
+            this.end = end;
             this.today = false;
         } else {
             this.state = Day.RECODING;
+            this.start = start;
+            this.end = end;
             this.today = true;
         }
     }
@@ -31603,6 +31617,12 @@ var Day = (function () {
     };
 
     Day.prototype.getDiff = function getDiff() {
+        if (this.isNotYet()) {
+            return 0;
+        }
+        if (!this.workingHour) {
+            return 0;
+        }
         return _utilsDateJs.getDiff(_utilsDateJs.getTime(this.start), _utilsDateJs.getTime(this.end));
     };
 
@@ -31633,6 +31653,11 @@ var Day = (function () {
     };
 
     Day.prototype.getOvertimeLevel = function getOvertimeLevel() {
+
+        if (this.workingHour < 8) {
+            return 0;
+        }
+
         var diff = this.getDiff();
 
         if (diff >= 900) {
@@ -31644,6 +31669,10 @@ var Day = (function () {
         } else {
             return 0;
         }
+    };
+
+    Day.prototype.isNotYet = function isNotYet() {
+        return this.state == Day.NOT_YET;
     };
 
     return Day;
@@ -31705,11 +31734,9 @@ var days = [new _modelsDayJs2['default'](new Date(2015, 8, 11), '09:00', '18:00'
         return days;
     },
     getTotal: function getTotal() {
-        return _underscore2['default'].chain(days).filter(function (day) {
-            return day.state != _modelsDayJs2['default'].NOT_YET;
-        }).reduce(function (sum, day) {
+        return _underscore2['default'].reduce(days, function (sum, day) {
             return sum + day.getWorkedTime();
-        }, 0).value();
+        }, 0);
     },
     getFullWorkingHour: function getFullWorkingHour() {
         return _underscore2['default'].reduce(days, function (sum, day) {
