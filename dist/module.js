@@ -31368,7 +31368,7 @@ var Day = _react2['default'].createClass({
                 null,
                 _react2['default'].createElement(
                     'span',
-                    { className: disabled ? 'disabled' : '', onClick: this.toggle },
+                    { className: disabled ? 'disabled' : '', onClick: this.toggle, onTouchStart: this.toggle },
                     day.workingHour,
                     'h'
                 )

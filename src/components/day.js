@@ -39,7 +39,7 @@ var Day = React.createClass({
 
         return (
             <tr>
-                <td><span className={ disabled ? 'disabled' : '' } onClick={this.toggle}>{day.workingHour}h</span></td>
+                <td><span className={ disabled ? 'disabled' : '' } onClick={this.toggle} onTouchStart={this.toggle}>{day.workingHour}h</span></td>
                 <td>{day.date}</td>
                 <td><input type="time" disabled={disabled} value={day.start} onChange={this.handleStart}/></td>
                 <td><input type="time" disabled={disabled} value={day.end} onChange={this.handleEnd}/></td>
