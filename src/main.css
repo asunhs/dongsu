@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Open Sans Condensed', sans-serif;
 }
 
 div {
@@ -59,6 +59,7 @@ div.dashboard div.time > div {
 div.dashboard div.time > div:nth-child(1) {
     width: 40%;
     font-size: 0.8em;
+    font-weight: bold;
 }
 
 div.dashboard div.time > div:nth-child(2) {
@@ -78,6 +79,7 @@ div.dashboard div.big > div {
 }
 
 div.dashboard div.big > div:nth-child(1) {
+    font-weight: bold;
     font-size: 1.3em;
 }
 
@@ -117,17 +119,17 @@ table.timetable > tbody > tr > td:nth-child(4) {
 
 table.timetable tr.disabled,
 table.timetable tr.disabled input {
-    background-color: #bbbbbb;
+    background-color: #d4d4d4;
 }
 
 table.timetable tr.today,
 table.timetable tr.today input {
-    background-color: #ffff88;
+    background-color: #f6f6d4;
 }
 
 table.timetable tr.expired,
 table.timetable tr.expired input {
-    background-color: #ccccff;
+    background-color: #d4d4f6;
 }
 
 .clk {
