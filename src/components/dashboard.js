@@ -59,8 +59,8 @@ var Dashboard = React.createClass({
     render() {
         return (
             <div className="dashboard">
-                <div className={DayStore.isAutoRecord() ? 'hb auto' : 'hb auto off'} onClick={this.autoRecord} onTouchStart={this.autoRecord}>{ DayStore.isAutoRecord() ? 'AUTO' : 'MANUAL' }</div>
-                <div className={DayStore.isRecording() ? 'hb record' : 'hb record off'} onClick={this.toggle} onTouchStart={this.toggle}>{ DayStore.isRecording() ? 'RECODING' : 'STOP' }</div>
+                <div className={DayStore.isAutoRecord() ? 'hb auto clk' : 'hb auto clk off'} onClick={this.autoRecord} onTouchStart={this.autoRecord}>{ DayStore.isAutoRecord() ? 'AUTO' : 'MANUAL' }</div>
+                <div className={DayStore.isRecording() ? 'hb record clk' : 'hb record clk off'} onClick={this.toggle} onTouchStart={this.toggle}>{ DayStore.isRecording() ? 'RECODING' : 'STOP' }</div>
 
                 <div className="main">
                     <div className="big">

@@ -31317,12 +31317,12 @@ var Dashboard = _react2['default'].createClass({
             { className: 'dashboard' },
             _react2['default'].createElement(
                 'div',
-                { className: _storesDayJs2['default'].isAutoRecord() ? 'hb auto' : 'hb auto off', onClick: this.autoRecord, onTouchStart: this.autoRecord },
+                { className: _storesDayJs2['default'].isAutoRecord() ? 'hb auto clk' : 'hb auto clk off', onClick: this.autoRecord, onTouchStart: this.autoRecord },
                 _storesDayJs2['default'].isAutoRecord() ? 'AUTO' : 'MANUAL'
             ),
             _react2['default'].createElement(
                 'div',
-                { className: _storesDayJs2['default'].isRecording() ? 'hb record' : 'hb record off', onClick: this.toggle, onTouchStart: this.toggle },
+                { className: _storesDayJs2['default'].isRecording() ? 'hb record clk' : 'hb record clk off', onClick: this.toggle, onTouchStart: this.toggle },
                 _storesDayJs2['default'].isRecording() ? 'RECODING' : 'STOP'
             ),
             _react2['default'].createElement(
@@ -31461,11 +31461,12 @@ var Day = _react2['default'].createClass({
 
         var day = this.state.day,
             disabled = !day.workingHour || day.isNotYet(),
-            overtimeLevel = day.getOvertimeLevel();
+            overtimeLevel = day.getOvertimeLevel(),
+            state = disabled ? 'disabled' : day.today ? 'today' : 'expired';
 
         return _react2['default'].createElement(
             'tr',
-            null,
+            { className: state },
             _react2['default'].createElement(
                 'td',
                 null,
@@ -31491,7 +31492,7 @@ var Day = _react2['default'].createClass({
                 null,
                 _react2['default'].createElement(
                     'span',
-                    { className: disabled ? 'disabled' : '', onClick: this.toggle, onTouchStart: this.toggle },
+                    { className: disabled ? 'disabled clk' : 'clk', onClick: this.toggle, onTouchStart: this.toggle },
                     day.workingHour,
                     'h'
                 ),

@@ -9,7 +9,7 @@ div {
 
 div.dashboard {
     width: 100%;
-    padding: 0;
+    padding: 0 0 25px 0;
     margin: 0;
 }
 
@@ -97,7 +97,43 @@ div.dashboard div.big span.red {
 }
 
 
+table.timetable {
+    width: 100%;
+    border-spacing: 0;
+    font-size: 0.95em;
+}
 
+table.timetable tr {
+    height: 32px;
+}
+
+table.timetable > tbody > tr > td:nth-child(2),
+table.timetable > tbody > tr > td:nth-child(3),
 table.timetable > tbody > tr > td:nth-child(4) {
     text-align: center;
+}
+
+
+table.timetable tr.disabled,
+table.timetable tr.disabled input {
+    background-color: #bbbbbb;
+}
+
+table.timetable tr.today,
+table.timetable tr.today input {
+    background-color: #ffff88;
+}
+
+table.timetable tr.expired,
+table.timetable tr.expired input {
+    background-color: #ccccff;
+}
+
+.clk {
+    cursor: pointer;
+}
+
+input {
+    border: 0;
+    font-size: 1.1em;
 }
