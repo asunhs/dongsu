@@ -10,8 +10,6 @@ import Recorder from '../utils/recorder.js';
 var todayId = DayStore.getTodayId(),
     recorder = new Recorder();
 
-//recorder.set();
-
 function getData() {
     var total = DayStore.getTotal(),
         fulltime = DayStore.getFullWorkingHour(),
@@ -31,18 +29,22 @@ var Dashboard = React.createClass({
     getInitialState() {
         return getData();
     },
+    record() {
+        if (DayStore.isRecording()) {
+            recorder.set();
+        } else {
+            recorder.clear();
+        }
+    },
     componentDidMount() {
+        this.record();
         DayStore.addChangeListener(this.update);
     },
     componentWillUnmount() {
         DayStore.removeChangeListener(this.update);
     },
     update() {
-        if (DayStore.isRecording()) {
-            recorder.set();
-        } else {
-            recorder.clear();
-        }
+        this.record();
         this.setState(getData());
     },
     toggle() {
@@ -55,9 +57,10 @@ var Dashboard = React.createClass({
     },
     render() {
         return (
-            <div>
-                <p onClick={this.autoRecord} onTouchStart={this.autoRecord}>{ DayStore.isAutoRecord() ? 'AUTO' : 'MANUAL' }</p>
-                <p onClick={this.toggle} onTouchStart={this.toggle}>{ DayStore.isRecording() ? 'RECODING' : 'STOP' }</p>
+            <div className="dashboard">
+                <div className={DayStore.isAutoRecord() ? 'hb auto' : 'hb auto off'} onClick={this.autoRecord} onTouchStart={this.autoRecord}>{ DayStore.isAutoRecord() ? 'AUTO' : 'MANUAL' }</div>
+                <div className={DayStore.isRecording() ? 'hb record' : 'hb record off'} onClick={this.toggle} onTouchStart={this.toggle}>{ DayStore.isRecording() ? 'RECODING' : 'STOP' }</div>
+
                 <p>FullTime {getTimeString(this.state.fulltime)}</p>
                 <p>Total {getTimeString(this.state.total)}</p>
                 <p>Remain {getTimeString(this.state.remain)}</p>

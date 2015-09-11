@@ -1,3 +1,31 @@
+div {
+    display: inline-block;
+}
+
+div.dashboard {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+div.dashboard > div.hb {
+    width: 50%;
+    text-align: center;
+    font-weight: bold;
+}
+
+div.dashboard > div.hb.off {
+    opacity: 0.5;
+}
+
+div.auto {
+    background-color: #ffff77;
+}
+
+div.record {
+    background-color: #ff7777;
+}
+
 table.timetable > tbody > tr > td:nth-child(4) {
     text-align: center;
 }

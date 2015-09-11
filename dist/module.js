@@ -31261,8 +31261,6 @@ var _utilsRecorderJs2 = _interopRequireDefault(_utilsRecorderJs);
 var todayId = _storesDayJs2['default'].getTodayId(),
     recorder = new _utilsRecorderJs2['default']();
 
-//recorder.set();
-
 function getData() {
     var total = _storesDayJs2['default'].getTotal(),
         fulltime = _storesDayJs2['default'].getFullWorkingHour(),
@@ -31283,18 +31281,22 @@ var Dashboard = _react2['default'].createClass({
     getInitialState: function getInitialState() {
         return getData();
     },
+    record: function record() {
+        if (_storesDayJs2['default'].isRecording()) {
+            recorder.set();
+        } else {
+            recorder.clear();
+        }
+    },
     componentDidMount: function componentDidMount() {
+        this.record();
         _storesDayJs2['default'].addChangeListener(this.update);
     },
     componentWillUnmount: function componentWillUnmount() {
         _storesDayJs2['default'].removeChangeListener(this.update);
     },
     update: function update() {
-        if (_storesDayJs2['default'].isRecording()) {
-            recorder.set();
-        } else {
-            recorder.clear();
-        }
+        this.record();
         this.setState(getData());
     },
     toggle: function toggle() {
@@ -31308,15 +31310,15 @@ var Dashboard = _react2['default'].createClass({
     render: function render() {
         return _react2['default'].createElement(
             'div',
-            null,
+            { className: 'dashboard' },
             _react2['default'].createElement(
-                'p',
-                { onClick: this.autoRecord, onTouchStart: this.autoRecord },
+                'div',
+                { className: _storesDayJs2['default'].isAutoRecord() ? 'hb auto' : 'hb auto off', onClick: this.autoRecord, onTouchStart: this.autoRecord },
                 _storesDayJs2['default'].isAutoRecord() ? 'AUTO' : 'MANUAL'
             ),
             _react2['default'].createElement(
-                'p',
-                { onClick: this.toggle, onTouchStart: this.toggle },
+                'div',
+                { className: _storesDayJs2['default'].isRecording() ? 'hb record' : 'hb record off', onClick: this.toggle, onTouchStart: this.toggle },
                 _storesDayJs2['default'].isRecording() ? 'RECODING' : 'STOP'
             ),
             _react2['default'].createElement(
