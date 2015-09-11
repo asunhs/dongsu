@@ -26,6 +26,16 @@ function getData() {
     };
 }
 
+var tick = false;
+
+function getRunningTime(time) {
+    if (!recorder.recording || tick) {
+        return getTimeString(time);
+    } else {
+        return getTimeString(time).replace(":", " ");
+    }
+}
+
 
 var Dashboard = React.createClass({
     getInitialState() {
@@ -72,6 +82,8 @@ var Dashboard = React.createClass({
             reverseHour = getTimeString(start + (8 * 60)),
             officeHour = getTimeString(start + (9 * 60));
 
+        tick = !tick;
+
         return (
             <div className="dashboard">
                 <div className={DayStore.isAutoRecord() ? 'hb auto clk' : 'hb auto clk off'} onClick={this.autoRecord} onTouchStart={this.autoRecord}>{ DayStore.isAutoRecord() ? 'AUTO' : 'MANUAL' }</div>
@@ -80,7 +92,7 @@ var Dashboard = React.createClass({
                 <div className="main">
                     <div className="big">
                         <div><span className={this.state.light}>●</span> Today</div>
-                        <div className="clk" onClick={this.info} onTouchStart={this.info}>{getTimeString(this.state.today)}</div>
+                        <div className="clk" onClick={this.info} onTouchStart={this.info}>{getRunningTime(this.state.today)}</div>
                     </div>
                 </div>
                 <div className="board">
@@ -90,11 +102,11 @@ var Dashboard = React.createClass({
                     </div>
                     <div className="total time">
                         <div>Total</div>
-                        <div>{getTimeString(this.state.total)}</div>
+                        <div>{getRunningTime(this.state.total)}</div>
                     </div>
                     <div className="remain time">
                         <div>Remain</div>
-                        <div>{getTimeString(this.state.remain)}</div>
+                        <div>{getRunningTime(this.state.remain)}</div>
                     </div>
                 </div>
                 <div className="info">

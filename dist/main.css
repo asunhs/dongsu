@@ -15,11 +15,11 @@ div.dashboard {
 }
 
 div.dashboard > div.hb {
-    height: 30px;
-    padding: 5px;
+    padding: 8px;
     width: 50%;
     text-align: center;
     font-weight: bold;
+    margin-bottom: 20px;
 }
 
 div.dashboard > div.hb.off {

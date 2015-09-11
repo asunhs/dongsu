@@ -31280,6 +31280,16 @@ function getData() {
     };
 }
 
+var tick = false;
+
+function getRunningTime(time) {
+    if (!recorder.recording || tick) {
+        return _utilsDateJs.getTimeString(time);
+    } else {
+        return _utilsDateJs.getTimeString(time).replace(":", " ");
+    }
+}
+
 var Dashboard = _react2['default'].createClass({
     displayName: 'Dashboard',
 
@@ -31327,6 +31337,8 @@ var Dashboard = _react2['default'].createClass({
             reverseHour = _utilsDateJs.getTimeString(start + 8 * 60),
             officeHour = _utilsDateJs.getTimeString(start + 9 * 60);
 
+        tick = !tick;
+
         return _react2['default'].createElement(
             'div',
             { className: 'dashboard' },
@@ -31359,7 +31371,7 @@ var Dashboard = _react2['default'].createClass({
                     _react2['default'].createElement(
                         'div',
                         { className: 'clk', onClick: this.info, onTouchStart: this.info },
-                        _utilsDateJs.getTimeString(this.state.today)
+                        getRunningTime(this.state.today)
                     )
                 )
             ),
@@ -31391,7 +31403,7 @@ var Dashboard = _react2['default'].createClass({
                     _react2['default'].createElement(
                         'div',
                         null,
-                        _utilsDateJs.getTimeString(this.state.total)
+                        getRunningTime(this.state.total)
                     )
                 ),
                 _react2['default'].createElement(
@@ -31405,7 +31417,7 @@ var Dashboard = _react2['default'].createClass({
                     _react2['default'].createElement(
                         'div',
                         null,
-                        _utilsDateJs.getTimeString(this.state.remain)
+                        getRunningTime(this.state.remain)
                     )
                 )
             ),
@@ -32116,7 +32128,7 @@ var Recorder = (function () {
     Recorder.prototype.set = function set() {
         var targetId = this.targetId;
 
-        if (!targetId) {
+        if (targetId < 0) {
             return;
         }
 
@@ -32142,7 +32154,7 @@ var Recorder = (function () {
                     end: _utilsDateJs.getTimeString(now.getHours(), now.getMinutes())
                 });
             }
-        }, 1000);
+        }, 500);
     };
 
     Recorder.prototype.clear = function clear() {

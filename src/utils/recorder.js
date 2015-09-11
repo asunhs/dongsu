@@ -11,7 +11,7 @@ class Recorder {
     set() {
         var targetId = this.targetId;
 
-        if (!targetId) {
+        if (targetId < 0) {
             return;
         }
 
@@ -37,7 +37,7 @@ class Recorder {
                     end: getTimeString(now.getHours(), now.getMinutes())
                 });
             }
-        }, 1000);
+        }, 500);
     }
     clear() {
         this.recording = false;
