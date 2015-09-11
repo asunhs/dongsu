@@ -4,8 +4,10 @@ import {EventEmitter} from 'events';
 import Actions from '../actions/actions.js';
 import {getTime, getDiff, getCurrentWeek} from '../utils/date.js';
 import Day from '../models/day.js'
-import DayStorage from '../storages/days.js';
+import Storage from '../storages/storage.js';
 
+var DayStorage = new Storage('days'),
+    AutoRecordStorage = new Storage('autoRecord');
 
 function loadDays() {
     var stored = DayStorage.get();
@@ -24,10 +26,12 @@ function loadDays() {
 
 
 var days = loadDays(),
-    recording = false,
+    autoRecord = !!AutoRecordStorage.get(),
+    recording = autoRecord,
     DayStore = _.extend({}, EventEmitter.prototype, {
         emitChange() {
             DayStorage.set(days);
+            AutoRecordStorage.set(autoRecord);
             this.emit('change');
         },
         addChangeListener(callback) {
@@ -56,6 +60,9 @@ var days = loadDays(),
         isRecording() {
             return recording;
         },
+        isAutoRecord() {
+            return autoRecord;
+        },
         dispatchToken: Dispatcher.register((action) => {
             switch (action.type) {
                 case Actions.DAY_CHANGE: {
@@ -73,6 +80,11 @@ var days = loadDays(),
                 }
                 case Actions.RECORD_TOGGLE: {
                     recording = !recording;
+                    DayStore.emitChange();
+                    break;
+                }
+                case Actions.AUTO_RECORD_TOGGLE: {
+                    autoRecord = !autoRecord;
                     DayStore.emitChange();
                     break;
                 }

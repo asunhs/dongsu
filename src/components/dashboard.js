@@ -49,9 +49,14 @@ var Dashboard = React.createClass({
         event.preventDefault();
         DayAction.record();
     },
+    autoRecord() {
+        event.preventDefault();
+        DayAction.auto();
+    },
     render() {
         return (
             <div>
+                <p onClick={this.autoRecord} onTouchStart={this.autoRecord}>{ DayStore.isAutoRecord() ? 'AUTO' : 'MANUAL' }</p>
                 <p onClick={this.toggle} onTouchStart={this.toggle}>{ DayStore.isRecording() ? 'RECODING' : 'STOP' }</p>
                 <p>FullTime {getTimeString(this.state.fulltime)}</p>
                 <p>Total {getTimeString(this.state.total)}</p>

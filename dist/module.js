@@ -31179,7 +31179,8 @@ exports.__esModule = true;
 var Actions = {
     DAY_TOGGLE: 'DAY_TOGGLE',
     DAY_CHANGE: 'DAY_CHANGE',
-    RECORD_TOGGLE: 'RECORD_TOGGLE'
+    RECORD_TOGGLE: 'RECORD_TOGGLE',
+    AUTO_RECORD_TOGGLE: 'AUTO_RECORD_TOGGLE'
 };
 
 exports['default'] = Actions;
@@ -31216,6 +31217,11 @@ var DayAction = {
     record: function record() {
         _dispatcherJs2['default'].dispatch({
             type: _actionsJs2['default'].RECORD_TOGGLE
+        });
+    },
+    auto: function auto() {
+        _dispatcherJs2['default'].dispatch({
+            type: _actionsJs2['default'].AUTO_RECORD_TOGGLE
         });
     }
 };
@@ -31295,10 +31301,19 @@ var Dashboard = _react2['default'].createClass({
         event.preventDefault();
         _actionsDayJs2['default'].record();
     },
+    autoRecord: function autoRecord() {
+        event.preventDefault();
+        _actionsDayJs2['default'].auto();
+    },
     render: function render() {
         return _react2['default'].createElement(
             'div',
             null,
+            _react2['default'].createElement(
+                'p',
+                { onClick: this.autoRecord, onTouchStart: this.autoRecord },
+                _storesDayJs2['default'].isAutoRecord() ? 'AUTO' : 'MANUAL'
+            ),
             _react2['default'].createElement(
                 'p',
                 { onClick: this.toggle, onTouchStart: this.toggle },
@@ -31341,7 +31356,7 @@ var Dashboard = _react2['default'].createClass({
 exports['default'] = Dashboard;
 module.exports = exports['default'];
 
-},{"../actions/day.js":164,"../stores/day.js":173,"../utils/date.js":174,"../utils/recorder.js":175,"react":161,"underscore":162}],166:[function(require,module,exports){
+},{"../actions/day.js":164,"../stores/day.js":172,"../utils/date.js":173,"../utils/recorder.js":174,"react":161,"underscore":162}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31444,7 +31459,7 @@ var Day = _react2['default'].createClass({
 exports['default'] = Day;
 module.exports = exports['default'];
 
-},{"../actions/day.js":164,"../stores/day.js":173,"../utils/date.js":174,"react":161,"underscore":162}],167:[function(require,module,exports){
+},{"../actions/day.js":164,"../stores/day.js":172,"../utils/date.js":173,"react":161,"underscore":162}],167:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31538,7 +31553,7 @@ var Days = _react2['default'].createClass({
 exports['default'] = Days;
 module.exports = exports['default'];
 
-},{"../stores/day.js":173,"./day.js":166,"react":161,"underscore":162}],168:[function(require,module,exports){
+},{"../stores/day.js":172,"./day.js":166,"react":161,"underscore":162}],168:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31723,25 +31738,7 @@ Day.RED = 'RED';
 exports['default'] = Day;
 module.exports = exports['default'];
 
-},{"../utils/date.js":174,"underscore":162}],171:[function(require,module,exports){
-'use strict';
-
-exports.__esModule = true;
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _underscore = require('underscore');
-
-var _underscore2 = _interopRequireDefault(_underscore);
-
-var _storageJs = require('./storage.js');
-
-var _storageJs2 = _interopRequireDefault(_storageJs);
-
-exports['default'] = new _storageJs2['default']('keys');
-module.exports = exports['default'];
-
-},{"./storage.js":172,"underscore":162}],172:[function(require,module,exports){
+},{"../utils/date.js":173,"underscore":162}],171:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -31773,7 +31770,7 @@ exports['default'] = Storage;
 module.exports = exports['default'];
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],173:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31800,12 +31797,15 @@ var _modelsDayJs = require('../models/day.js');
 
 var _modelsDayJs2 = _interopRequireDefault(_modelsDayJs);
 
-var _storagesDaysJs = require('../storages/days.js');
+var _storagesStorageJs = require('../storages/storage.js');
 
-var _storagesDaysJs2 = _interopRequireDefault(_storagesDaysJs);
+var _storagesStorageJs2 = _interopRequireDefault(_storagesStorageJs);
+
+var DayStorage = new _storagesStorageJs2['default']('days'),
+    AutoRecordStorage = new _storagesStorageJs2['default']('autoRecord');
 
 function loadDays() {
-    var stored = _storagesDaysJs2['default'].get();
+    var stored = DayStorage.get();
 
     return _underscore2['default'].map(_utilsDateJs.getCurrentWeek(), function (date) {
         var matched = _underscore2['default'].findWhere(stored, {
@@ -31820,10 +31820,12 @@ function loadDays() {
 }
 
 var days = loadDays(),
-    recording = false,
+    autoRecord = !!AutoRecordStorage.get(),
+    recording = autoRecord,
     DayStore = _underscore2['default'].extend({}, _events.EventEmitter.prototype, {
     emitChange: function emitChange() {
-        _storagesDaysJs2['default'].set(days);
+        DayStorage.set(days);
+        AutoRecordStorage.set(autoRecord);
         this.emit('change');
     },
     addChangeListener: function addChangeListener(callback) {
@@ -31856,6 +31858,9 @@ var days = loadDays(),
     isRecording: function isRecording() {
         return recording;
     },
+    isAutoRecord: function isAutoRecord() {
+        return autoRecord;
+    },
     dispatchToken: _dispatcherJs2['default'].register(function (action) {
         switch (action.type) {
             case _actionsActionsJs2['default'].DAY_CHANGE:
@@ -31879,6 +31884,12 @@ var days = loadDays(),
                     DayStore.emitChange();
                     break;
                 }
+            case _actionsActionsJs2['default'].AUTO_RECORD_TOGGLE:
+                {
+                    autoRecord = !autoRecord;
+                    DayStore.emitChange();
+                    break;
+                }
         }
     })
 });
@@ -31886,7 +31897,7 @@ var days = loadDays(),
 exports['default'] = DayStore;
 module.exports = exports['default'];
 
-},{"../actions/actions.js":163,"../dispatcher.js":168,"../models/day.js":170,"../storages/days.js":171,"../utils/date.js":174,"events":4,"underscore":162}],174:[function(require,module,exports){
+},{"../actions/actions.js":163,"../dispatcher.js":168,"../models/day.js":170,"../storages/storage.js":171,"../utils/date.js":173,"events":4,"underscore":162}],173:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31950,7 +31961,7 @@ DateUtils.getCurrentWeek = getCurrentWeek;
 exports['default'] = DateUtils;
 module.exports = exports['default'];
 
-},{"underscore":162}],175:[function(require,module,exports){
+},{"underscore":162}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -32016,4 +32027,4 @@ var Recorder = (function () {
 exports['default'] = Recorder;
 module.exports = exports['default'];
 
-},{"../actions/day.js":164,"../stores/day.js":173,"../utils/date.js":174}]},{},[169]);
+},{"../actions/day.js":164,"../stores/day.js":172,"../utils/date.js":173}]},{},[169]);

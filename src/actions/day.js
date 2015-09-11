@@ -18,6 +18,11 @@ var DayAction = {
         Dispatcher.dispatch({
             type: Actions.RECORD_TOGGLE
         });
+    },
+    auto() {
+        Dispatcher.dispatch({
+            type: Actions.AUTO_RECORD_TOGGLE
+        });
     }
 };
 
