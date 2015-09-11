@@ -31178,7 +31178,8 @@ module.exports = require('./lib/React');
 exports.__esModule = true;
 var Actions = {
     DAY_TOGGLE: 'DAY_TOGGLE',
-    DAY_CHANGE: 'DAY_CHANGE'
+    DAY_CHANGE: 'DAY_CHANGE',
+    RECORD_TOGGLE: 'RECORD_TOGGLE'
 };
 
 exports['default'] = Actions;
@@ -31211,6 +31212,11 @@ var DayAction = {
             type: _actionsJs2['default'].DAY_CHANGE,
             day: day
         });
+    },
+    record: function record() {
+        _dispatcherJs2['default'].dispatch({
+            type: _actionsJs2['default'].RECORD_TOGGLE
+        });
     }
 };
 
@@ -31236,12 +31242,25 @@ var _storesDayJs = require('../stores/day.js');
 
 var _storesDayJs2 = _interopRequireDefault(_storesDayJs);
 
+var _actionsDayJs = require('../actions/day.js');
+
+var _actionsDayJs2 = _interopRequireDefault(_actionsDayJs);
+
 var _utilsDateJs = require('../utils/date.js');
+
+var _utilsRecorderJs = require('../utils/recorder.js');
+
+var _utilsRecorderJs2 = _interopRequireDefault(_utilsRecorderJs);
+
+var todayId = _storesDayJs2['default'].getTodayId(),
+    recorder = new _utilsRecorderJs2['default']();
+
+//recorder.set();
 
 function getData() {
     var total = _storesDayJs2['default'].getTotal(),
         fulltime = _storesDayJs2['default'].getFullWorkingHour(),
-        today = _storesDayJs2['default'].getToday();
+        today = _storesDayJs2['default'].get(todayId);
 
     return {
         total: total,
@@ -31265,13 +31284,26 @@ var Dashboard = _react2['default'].createClass({
         _storesDayJs2['default'].removeChangeListener(this.update);
     },
     update: function update() {
+        if (_storesDayJs2['default'].isRecording()) {
+            recorder.set();
+        } else {
+            recorder.clear();
+        }
         this.setState(getData());
     },
-
+    toggle: function toggle() {
+        event.preventDefault();
+        _actionsDayJs2['default'].record();
+    },
     render: function render() {
         return _react2['default'].createElement(
             'div',
             null,
+            _react2['default'].createElement(
+                'p',
+                { onClick: this.toggle, onTouchStart: this.toggle },
+                _storesDayJs2['default'].isRecording() ? 'RECODING' : 'STOP'
+            ),
             _react2['default'].createElement(
                 'p',
                 null,
@@ -31309,7 +31341,7 @@ var Dashboard = _react2['default'].createClass({
 exports['default'] = Dashboard;
 module.exports = exports['default'];
 
-},{"../stores/day.js":173,"../utils/date.js":174,"react":161,"underscore":162}],166:[function(require,module,exports){
+},{"../actions/day.js":164,"../stores/day.js":173,"../utils/date.js":174,"../utils/recorder.js":175,"react":161,"underscore":162}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31788,6 +31820,7 @@ function loadDays() {
 }
 
 var days = loadDays(),
+    recording = false,
     DayStore = _underscore2['default'].extend({}, _events.EventEmitter.prototype, {
     emitChange: function emitChange() {
         _storagesDaysJs2['default'].set(days);
@@ -31815,10 +31848,13 @@ var days = loadDays(),
             return sum + day.getWorkingMinute();
         }, 0);
     },
-    getToday: function getToday() {
-        return _underscore2['default'].findWhere(days, {
+    getTodayId: function getTodayId() {
+        return _underscore2['default'].findIndex(days, {
             today: true
         });
+    },
+    isRecording: function isRecording() {
+        return recording;
     },
     dispatchToken: _dispatcherJs2['default'].register(function (action) {
         switch (action.type) {
@@ -31837,11 +31873,15 @@ var days = loadDays(),
                     DayStore.emitChange();
                     break;
                 }
+            case _actionsActionsJs2['default'].RECORD_TOGGLE:
+                {
+                    recording = !recording;
+                    DayStore.emitChange();
+                    break;
+                }
         }
     })
 });
-
-console.log(days);
 
 exports['default'] = DayStore;
 module.exports = exports['default'];
@@ -31878,8 +31918,11 @@ function getTime(str) {
     return parseInt(matched[1]) * 60 + parseInt(matched[2]);
 }
 
-function getTimeString(time) {
-    return timePadding(Math.floor(time / 60)) + ':' + timePadding(time % 60);
+function getTimeString(hour, min) {
+    if (_underscore2['default'].isNumber(min)) {
+        return timePadding(hour) + ':' + timePadding(min);
+    }
+    return timePadding(Math.floor(hour / 60)) + ':' + timePadding(hour % 60);
 }
 
 function getDiff(start, end) {
@@ -31907,4 +31950,70 @@ DateUtils.getCurrentWeek = getCurrentWeek;
 exports['default'] = DateUtils;
 module.exports = exports['default'];
 
-},{"underscore":162}]},{},[169]);
+},{"underscore":162}],175:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _storesDayJs = require('../stores/day.js');
+
+var _storesDayJs2 = _interopRequireDefault(_storesDayJs);
+
+var _actionsDayJs = require('../actions/day.js');
+
+var _actionsDayJs2 = _interopRequireDefault(_actionsDayJs);
+
+var _utilsDateJs = require('../utils/date.js');
+
+var Recorder = (function () {
+    function Recorder() {
+        _classCallCheck(this, Recorder);
+
+        this.recording = false;
+        this.targetId = _storesDayJs2['default'].getTodayId();
+    }
+
+    Recorder.prototype.set = function set() {
+        var targetId = this.targetId;
+
+        if (this.recording) {
+            return;
+        }
+
+        this.recording = true;
+        this.interval = setInterval(function () {
+            var now = new Date(),
+                target = _storesDayJs2['default'].get(targetId);
+
+            if (!target.start) {
+                _actionsDayJs2['default'].change({
+                    id: targetId,
+                    start: _utilsDateJs.getTimeString(now.getHours(), now.getMinutes()),
+                    end: _utilsDateJs.getTimeString(now.getHours(), now.getMinutes())
+                });
+            } else {
+                _actionsDayJs2['default'].change({
+                    id: targetId,
+                    start: target.start,
+                    end: _utilsDateJs.getTimeString(now.getHours(), now.getMinutes())
+                });
+            }
+        }, 1000);
+    };
+
+    Recorder.prototype.clear = function clear() {
+        this.recording = false;
+        clearInterval(this.interval);
+    };
+
+    return Recorder;
+})();
+
+exports['default'] = Recorder;
+module.exports = exports['default'];
+
+},{"../actions/day.js":164,"../stores/day.js":173,"../utils/date.js":174}]},{},[169]);

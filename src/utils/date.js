@@ -23,8 +23,11 @@ function getTime(str) {
     return parseInt(matched[1])*60 + parseInt(matched[2]);
 }
 
-function getTimeString(time) {
-    return timePadding(Math.floor(time/60)) + ':' + timePadding(time%60);
+function getTimeString(hour, min) {
+    if (_.isNumber(min)) {
+        return timePadding(hour) + ':' + timePadding(min);
+    }
+    return timePadding(Math.floor(hour/60)) + ':' + timePadding(hour%60);
 }
 
 function getDiff(start, end) {

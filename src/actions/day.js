@@ -13,6 +13,11 @@ var DayAction = {
             type: Actions.DAY_CHANGE,
             day: day
         });
+    },
+    record() {
+        Dispatcher.dispatch({
+            type: Actions.RECORD_TOGGLE
+        });
     }
 };
 

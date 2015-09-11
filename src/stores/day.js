@@ -24,6 +24,7 @@ function loadDays() {
 
 
 var days = loadDays(),
+    recording = false,
     DayStore = _.extend({}, EventEmitter.prototype, {
         emitChange() {
             DayStorage.set(days);
@@ -47,10 +48,13 @@ var days = loadDays(),
         getFullWorkingHour() {
             return _.reduce(days, (sum, day) => sum + day.getWorkingMinute(), 0);
         },
-        getToday() {
-            return _.findWhere(days, {
+        getTodayId() {
+            return _.findIndex(days, {
                 today: true
             });
+        },
+        isRecording() {
+            return recording;
         },
         dispatchToken: Dispatcher.register((action) => {
             switch (action.type) {
@@ -67,11 +71,14 @@ var days = loadDays(),
                     DayStore.emitChange();
                     break;
                 }
+                case Actions.RECORD_TOGGLE: {
+                    recording = !recording;
+                    DayStore.emitChange();
+                    break;
+                }
             }
         })
     });
-
-console.log(days);
 
 export default DayStore;
 
