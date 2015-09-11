@@ -37,8 +37,9 @@ function getCurrentWeek() {
         day = today.getDay();
 
     return _.map([5,4,3,2,1], i => {
-        var d = new Date()
+        var d = new Date();
         d.setDate(date - day + i);
+        d.setHours(0,0,0,0);
         return d;
     });
 }
@@ -47,5 +48,6 @@ function getCurrentWeek() {
 DateUtils.getTime = getTime;
 DateUtils.getTimeString = getTimeString;
 DateUtils.getDiff = getDiff;
+DateUtils.getCurrentWeek = getCurrentWeek;
 
 export default DateUtils;

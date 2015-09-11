@@ -31309,7 +31309,7 @@ var Dashboard = _react2['default'].createClass({
 exports['default'] = Dashboard;
 module.exports = exports['default'];
 
-},{"../stores/day.js":171,"../utils/date.js":172,"react":161,"underscore":162}],166:[function(require,module,exports){
+},{"../stores/day.js":173,"../utils/date.js":174,"react":161,"underscore":162}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31377,7 +31377,7 @@ var Day = _react2['default'].createClass({
             _react2['default'].createElement(
                 'td',
                 null,
-                day.date
+                day.getDateString()
             ),
             _react2['default'].createElement(
                 'td',
@@ -31412,7 +31412,7 @@ var Day = _react2['default'].createClass({
 exports['default'] = Day;
 module.exports = exports['default'];
 
-},{"../actions/day.js":164,"../stores/day.js":171,"../utils/date.js":172,"react":161,"underscore":162}],167:[function(require,module,exports){
+},{"../actions/day.js":164,"../stores/day.js":173,"../utils/date.js":174,"react":161,"underscore":162}],167:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31506,7 +31506,7 @@ var Days = _react2['default'].createClass({
 exports['default'] = Days;
 module.exports = exports['default'];
 
-},{"../stores/day.js":171,"./day.js":166,"react":161,"underscore":162}],168:[function(require,module,exports){
+},{"../stores/day.js":173,"./day.js":166,"react":161,"underscore":162}],168:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31565,13 +31565,10 @@ var _utilsDateJs = require('../utils/date.js');
 var week = [' (Sun)', ' (Mon)', ' (Tue)', ' (Wed)', ' (Thr)', ' (Fri)', ' (Sat)'];
 
 var Day = (function () {
-    function Day(t, start, end) {
+    function Day(t, start, end, workingHour) {
         _classCallCheck(this, Day);
 
         var time = !t ? new Date() : new Date(t),
-            month = time.getMonth() + 1,
-            date = time.getDate(),
-            day = time.getDay(),
             now = new Date();
 
         time.setHours(0, 0, 0, 0);
@@ -31579,8 +31576,8 @@ var Day = (function () {
 
         var diff = time.getTime() - now.getTime();
 
-        this.date = month + '/' + date;
-        this.workingHour = 8;
+        this.date = time.getTime();
+        this.workingHour = _underscore2['default'].isNumber(workingHour) ? workingHour : 8;
 
         if (diff > 0) {
             this.state = Day.NOT_YET;
@@ -31610,6 +31607,11 @@ var Day = (function () {
                 this.workingHour = 0;
                 break;
         }
+    };
+
+    Day.prototype.getDateString = function getDateString() {
+        var date = new Date(this.date);
+        return date.getMonth() + 1 + '/' + date.getDate();
     };
 
     Day.prototype.getWorkingMinute = function getWorkingMinute() {
@@ -31689,7 +31691,57 @@ Day.RED = 'RED';
 exports['default'] = Day;
 module.exports = exports['default'];
 
-},{"../utils/date.js":172,"underscore":162}],171:[function(require,module,exports){
+},{"../utils/date.js":174,"underscore":162}],171:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _underscore = require('underscore');
+
+var _underscore2 = _interopRequireDefault(_underscore);
+
+var _storageJs = require('./storage.js');
+
+var _storageJs2 = _interopRequireDefault(_storageJs);
+
+exports['default'] = new _storageJs2['default']('keys');
+module.exports = exports['default'];
+
+},{"./storage.js":172,"underscore":162}],172:[function(require,module,exports){
+(function (global){
+'use strict';
+
+exports.__esModule = true;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var ls = global.localStorage;
+
+var Storage = (function () {
+    function Storage(key) {
+        _classCallCheck(this, Storage);
+
+        this.key = key;
+    }
+
+    Storage.prototype.set = function set(data) {
+        ls.setItem(this.key, JSON.stringify(data));
+    };
+
+    Storage.prototype.get = function get(data) {
+        return JSON.parse(ls.getItem(this.key) || '[]');
+    };
+
+    return Storage;
+})();
+
+exports['default'] = Storage;
+module.exports = exports['default'];
+
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{}],173:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31716,9 +31768,29 @@ var _modelsDayJs = require('../models/day.js');
 
 var _modelsDayJs2 = _interopRequireDefault(_modelsDayJs);
 
-var days = [new _modelsDayJs2['default'](new Date(2015, 8, 11), '09:00', '18:00'), new _modelsDayJs2['default'](new Date(2015, 8, 10), '09:00', '18:00'), new _modelsDayJs2['default'](new Date(2015, 8, 9), '09:00', '20:00'), new _modelsDayJs2['default'](new Date(2015, 8, 8), '09:00', '22:00'), new _modelsDayJs2['default'](new Date(2015, 8, 7), '09:00', '00:00')],
+var _storagesDaysJs = require('../storages/days.js');
+
+var _storagesDaysJs2 = _interopRequireDefault(_storagesDaysJs);
+
+function loadDays() {
+    var stored = _storagesDaysJs2['default'].get();
+
+    return _underscore2['default'].map(_utilsDateJs.getCurrentWeek(), function (date) {
+        var matched = _underscore2['default'].findWhere(stored, {
+            date: date.getTime()
+        });
+
+        if (!!matched) {
+            return new _modelsDayJs2['default'](date, matched.start, matched.end, matched.workingHour);
+        }
+        return new _modelsDayJs2['default'](date);
+    });
+}
+
+var days = loadDays(),
     DayStore = _underscore2['default'].extend({}, _events.EventEmitter.prototype, {
     emitChange: function emitChange() {
+        _storagesDaysJs2['default'].set(days);
         this.emit('change');
     },
     addChangeListener: function addChangeListener(callback) {
@@ -31769,10 +31841,12 @@ var days = [new _modelsDayJs2['default'](new Date(2015, 8, 11), '09:00', '18:00'
     })
 });
 
+console.log(days);
+
 exports['default'] = DayStore;
 module.exports = exports['default'];
 
-},{"../actions/actions.js":163,"../dispatcher.js":168,"../models/day.js":170,"../utils/date.js":172,"events":4,"underscore":162}],172:[function(require,module,exports){
+},{"../actions/actions.js":163,"../dispatcher.js":168,"../models/day.js":170,"../storages/days.js":171,"../utils/date.js":174,"events":4,"underscore":162}],174:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31812,9 +31886,23 @@ function getDiff(start, end) {
     return (end - start + 24 * 60) % (24 * 60);
 }
 
+function getCurrentWeek() {
+    var today = new Date(),
+        date = today.getDate(),
+        day = today.getDay();
+
+    return _underscore2['default'].map([5, 4, 3, 2, 1], function (i) {
+        var d = new Date();
+        d.setDate(date - day + i);
+        d.setHours(0, 0, 0, 0);
+        return d;
+    });
+}
+
 DateUtils.getTime = getTime;
 DateUtils.getTimeString = getTimeString;
 DateUtils.getDiff = getDiff;
+DateUtils.getCurrentWeek = getCurrentWeek;
 
 exports['default'] = DateUtils;
 module.exports = exports['default'];

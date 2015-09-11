@@ -6,19 +6,27 @@ import {getTime, getDiff, getCurrentWeek} from '../utils/date.js';
 import Day from '../models/day.js'
 import DayStorage from '../storages/days.js';
 
-console.log(getCurrentWeek());
 
-//var days = _.map(getCurrentWeek(), date => new Day(date));
+function loadDays() {
+    var stored = DayStorage.get();
 
-var days = [
-        new Day(new Date(2015, 8, 11), '09:00', '18:00'),
-        new Day(new Date(2015, 8, 10), '09:00', '18:00'),
-        new Day(new Date(2015, 8, 9), '09:00', '20:00'),
-        new Day(new Date(2015, 8, 8), '09:00', '22:00'),
-        new Day(new Date(2015, 8, 7), '09:00', '00:00')
-    ],
+    return _.map(getCurrentWeek(), date => {
+        var matched = _.findWhere(stored, {
+            date: date.getTime()
+        });
+
+        if (!!matched) {
+            return new Day(date, matched.start, matched.end, matched.workingHour);
+        }
+        return new Day(date);
+    });
+}
+
+
+var days = loadDays(),
     DayStore = _.extend({}, EventEmitter.prototype, {
         emitChange() {
+            DayStorage.set(days);
             this.emit('change');
         },
         addChangeListener(callback) {
@@ -62,6 +70,8 @@ var days = [
             }
         })
     });
+
+console.log(days);
 
 export default DayStore;
 

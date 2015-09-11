@@ -6,11 +6,8 @@ var week = [' (Sun)', ' (Mon)', ' (Tue)', ' (Wed)', ' (Thr)', ' (Fri)', ' (Sat)'
 
 
 class Day {
-    constructor(t, start, end) {
+    constructor(t, start, end, workingHour) {
         var time = !t ? new Date() : new Date(t),
-            month = time.getMonth() + 1,
-            date = time.getDate(),
-            day = time.getDay(),
             now = new Date();
 
         time.setHours(0,0,0,0);
@@ -19,7 +16,7 @@ class Day {
         var diff = time.getTime() - now.getTime();
 
         this.date = time.getTime();
-        this.workingHour = 8;
+        this.workingHour = _.isNumber(workingHour) ? workingHour : 8;
 
         if (diff > 0) {
             this.state = Day.NOT_YET;
