@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import React from 'react';
+import Day from '../models/day.js';
 import DayStore from '../stores/day.js';
 import DayAction from '../actions/day.js';
 import {getTimeString} from '../utils/date.js';
@@ -61,11 +62,26 @@ var Dashboard = React.createClass({
                 <div className={DayStore.isAutoRecord() ? 'hb auto' : 'hb auto off'} onClick={this.autoRecord} onTouchStart={this.autoRecord}>{ DayStore.isAutoRecord() ? 'AUTO' : 'MANUAL' }</div>
                 <div className={DayStore.isRecording() ? 'hb record' : 'hb record off'} onClick={this.toggle} onTouchStart={this.toggle}>{ DayStore.isRecording() ? 'RECODING' : 'STOP' }</div>
 
-                <p>FullTime {getTimeString(this.state.fulltime)}</p>
-                <p>Total {getTimeString(this.state.total)}</p>
-                <p>Remain {getTimeString(this.state.remain)}</p>
-                <p>Today {getTimeString(this.state.today)}</p>
-                <p>Light {this.state.light}</p>
+                <div className="main">
+                    <div className="big">
+                        <div><span className={this.state.light}>●</span> Today</div>
+                        <div>{getTimeString(this.state.today)}</div>
+                    </div>
+                </div>
+                <div className="board">
+                    <div className="full time">
+                        <div>Full time</div>
+                        <div>{getTimeString(this.state.fulltime)}</div>
+                    </div>
+                    <div className="total time">
+                        <div>Total</div>
+                        <div>{getTimeString(this.state.total)}</div>
+                    </div>
+                    <div className="remain time">
+                        <div>Remain</div>
+                        <div>{getTimeString(this.state.remain)}</div>
+                    </div>
+                </div>
             </div>
         );
     }

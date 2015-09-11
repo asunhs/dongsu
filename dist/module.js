@@ -31244,6 +31244,10 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
+var _modelsDayJs = require('../models/day.js');
+
+var _modelsDayJs2 = _interopRequireDefault(_modelsDayJs);
+
 var _storesDayJs = require('../stores/day.js');
 
 var _storesDayJs2 = _interopRequireDefault(_storesDayJs);
@@ -31322,34 +31326,73 @@ var Dashboard = _react2['default'].createClass({
                 _storesDayJs2['default'].isRecording() ? 'RECODING' : 'STOP'
             ),
             _react2['default'].createElement(
-                'p',
-                null,
-                'FullTime ',
-                _utilsDateJs.getTimeString(this.state.fulltime)
+                'div',
+                { className: 'main' },
+                _react2['default'].createElement(
+                    'div',
+                    { className: 'big' },
+                    _react2['default'].createElement(
+                        'div',
+                        null,
+                        _react2['default'].createElement(
+                            'span',
+                            { className: this.state.light },
+                            '●'
+                        ),
+                        ' Today'
+                    ),
+                    _react2['default'].createElement(
+                        'div',
+                        null,
+                        _utilsDateJs.getTimeString(this.state.today)
+                    )
+                )
             ),
             _react2['default'].createElement(
-                'p',
-                null,
-                'Total ',
-                _utilsDateJs.getTimeString(this.state.total)
-            ),
-            _react2['default'].createElement(
-                'p',
-                null,
-                'Remain ',
-                _utilsDateJs.getTimeString(this.state.remain)
-            ),
-            _react2['default'].createElement(
-                'p',
-                null,
-                'Today ',
-                _utilsDateJs.getTimeString(this.state.today)
-            ),
-            _react2['default'].createElement(
-                'p',
-                null,
-                'Light ',
-                this.state.light
+                'div',
+                { className: 'board' },
+                _react2['default'].createElement(
+                    'div',
+                    { className: 'full time' },
+                    _react2['default'].createElement(
+                        'div',
+                        null,
+                        'Full time'
+                    ),
+                    _react2['default'].createElement(
+                        'div',
+                        null,
+                        _utilsDateJs.getTimeString(this.state.fulltime)
+                    )
+                ),
+                _react2['default'].createElement(
+                    'div',
+                    { className: 'total time' },
+                    _react2['default'].createElement(
+                        'div',
+                        null,
+                        'Total'
+                    ),
+                    _react2['default'].createElement(
+                        'div',
+                        null,
+                        _utilsDateJs.getTimeString(this.state.total)
+                    )
+                ),
+                _react2['default'].createElement(
+                    'div',
+                    { className: 'remain time' },
+                    _react2['default'].createElement(
+                        'div',
+                        null,
+                        'Remain'
+                    ),
+                    _react2['default'].createElement(
+                        'div',
+                        null,
+                        _utilsDateJs.getTimeString(this.state.remain)
+                    )
+                )
             )
         );
     }
@@ -31358,7 +31401,7 @@ var Dashboard = _react2['default'].createClass({
 exports['default'] = Dashboard;
 module.exports = exports['default'];
 
-},{"../actions/day.js":164,"../stores/day.js":172,"../utils/date.js":173,"../utils/recorder.js":174,"react":161,"underscore":162}],166:[function(require,module,exports){
+},{"../actions/day.js":164,"../models/day.js":170,"../stores/day.js":172,"../utils/date.js":173,"../utils/recorder.js":174,"react":161,"underscore":162}],166:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31733,9 +31776,9 @@ Day.NOT_YET = 'NOT_YET';
 Day.RECODING = 'RECODING';
 Day.RECODED = 'RECODED';
 
-Day.GREEN = 'GREEN';
-Day.YELLOW = 'YELLOW';
-Day.RED = 'RED';
+Day.GREEN = 'green';
+Day.YELLOW = 'yellow';
+Day.RED = 'red';
 
 exports['default'] = Day;
 module.exports = exports['default'];

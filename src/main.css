@@ -1,5 +1,10 @@
+body {
+    margin: 0;
+}
+
 div {
     display: inline-block;
+    box-sizing: border-box;
 }
 
 div.dashboard {
@@ -9,6 +14,8 @@ div.dashboard {
 }
 
 div.dashboard > div.hb {
+    height: 30px;
+    padding: 5px;
     width: 50%;
     text-align: center;
     font-weight: bold;
@@ -25,6 +32,71 @@ div.auto {
 div.record {
     background-color: #ff7777;
 }
+
+div.dashboard > div.main {
+    width: 50%;
+}
+
+div.dashboard > div.board {
+    width: 50%;
+    vertical-align: middle;
+}
+
+div.dashboard > div.board > div {
+    width: 100%;
+}
+
+div.dashboard div.time {
+    padding: 5px;
+    vertical-align: middle;
+}
+
+div.dashboard div.time > div {
+    text-align: right;
+}
+
+div.dashboard div.time > div:nth-child(1) {
+    width: 40%;
+    font-size: 0.8em;
+}
+
+div.dashboard div.time > div:nth-child(2) {
+    width: 60%;
+    font-size: 1.3em;
+}
+
+div.dashboard div.big {
+    width: 100%;
+    padding: 5px;
+    vertical-align: middle;
+}
+
+div.dashboard div.big > div {
+    width: 100%;
+    text-align: right;
+}
+
+div.dashboard div.big > div:nth-child(1) {
+    font-size: 1.3em;
+}
+
+div.dashboard div.big > div:nth-child(2) {
+    font-size: 3em;
+}
+
+div.dashboard div.big span.green {
+    color: #88ee88
+}
+
+div.dashboard div.big span.yellow {
+    color: #eeee88
+}
+
+div.dashboard div.big span.red {
+    color: #ee8888
+}
+
+
 
 table.timetable > tbody > tr > td:nth-child(4) {
     text-align: center;

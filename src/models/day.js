@@ -115,9 +115,9 @@ Day.RECODING = 'RECODING';
 Day.RECODED = 'RECODED';
 
 
-Day.GREEN = 'GREEN';
-Day.YELLOW = 'YELLOW';
-Day.RED = 'RED';
+Day.GREEN = 'green';
+Day.YELLOW = 'yellow';
+Day.RED = 'red';
 
 
 
