@@ -142,6 +142,10 @@ table.timetable td{
     padding: 5px;
 }
 
+table.timetable > tbody > tr > td:nth-child(1) {
+    text-align: right;
+}
+
 table.timetable > tbody > tr > td:nth-child(2),
 table.timetable > tbody > tr > td:nth-child(3),
 table.timetable > tbody > tr > td:nth-child(4) {
@@ -162,7 +166,6 @@ table.timetable tr.today input {
 table.timetable tr.today > td:first-child {
     color: #b25555;
     font-weight: bold;
-    text-align: right;
 }
 
 table.timetable tr.expired,
