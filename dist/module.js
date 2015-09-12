@@ -31304,17 +31304,18 @@ var Dashboard = _react2['default'].createClass({
         this.record();
         this.setState(getData());
     },
-    info: function info() {
+    info: function info(event) {
+        event.preventDefault();
         this.setState({
             info: this.state.info == 'on' ? 'off' : 'on'
         });
         this.update();
     },
-    toggle: function toggle() {
+    toggle: function toggle(event) {
         event.preventDefault();
         _actionsDayJs2['default'].record();
     },
-    autoRecord: function autoRecord() {
+    autoRecord: function autoRecord(event) {
         event.preventDefault();
         _actionsDayJs2['default'].auto();
     },
@@ -31567,10 +31568,10 @@ var Day = _react2['default'].createClass({
             ),
             _react2['default'].createElement(
                 'td',
-                null,
+                { className: 'clk', onClick: this.toggle, onTouchStart: this.toggle },
                 _react2['default'].createElement(
                     'span',
-                    { className: disabled ? 'disabled clk' : 'clk', onClick: this.toggle, onTouchStart: this.toggle },
+                    { className: disabled ? 'disabled' : '' },
                     day.workingHour,
                     'h'
                 ),
