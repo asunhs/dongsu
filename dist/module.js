@@ -31303,6 +31303,12 @@ var Dashboard = _react2['default'].createClass({
         this.record();
         this.setState(getData());
     },
+    info: function info() {
+        this.setState({
+            info: this.state.info == 'on' ? 'off' : 'on'
+        });
+        this.update();
+    },
     toggle: function toggle() {
         event.preventDefault();
         _actionsDayJs2['default'].record();
@@ -31343,7 +31349,7 @@ var Dashboard = _react2['default'].createClass({
                     ),
                     _react2['default'].createElement(
                         'div',
-                        null,
+                        { onClick: this.info, onTouchStart: this.info },
                         _utilsDateJs.getTimeString(this.state.today)
                     )
                 )
@@ -31391,6 +31397,70 @@ var Dashboard = _react2['default'].createClass({
                         'div',
                         null,
                         _utilsDateJs.getTimeString(this.state.remain)
+                    )
+                )
+            ),
+            _react2['default'].createElement(
+                'div',
+                { className: 'info' },
+                _react2['default'].createElement(
+                    'div',
+                    { className: this.state.info },
+                    _react2['default'].createElement(
+                        'div',
+                        { className: 'section' },
+                        _react2['default'].createElement(
+                            'div',
+                            null,
+                            'A'
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            null,
+                            '00:00'
+                        )
+                    ),
+                    _react2['default'].createElement(
+                        'div',
+                        { className: 'section' },
+                        _react2['default'].createElement(
+                            'div',
+                            null,
+                            'B'
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            null,
+                            '00:00'
+                        )
+                    ),
+                    _react2['default'].createElement(
+                        'div',
+                        { className: 'section' },
+                        _react2['default'].createElement(
+                            'div',
+                            null,
+                            'C'
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            null,
+                            '00:00'
+                        )
+                    ),
+                    _react2['default'].createElement(
+                        'div',
+                        { className: 'section' },
+                        _react2['default'].createElement(
+                            'div',
+                            null,
+                            'D'
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            null,
+                            '00:00'
+                        )
                     )
                 )
             )

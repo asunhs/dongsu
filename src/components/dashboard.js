@@ -48,6 +48,12 @@ var Dashboard = React.createClass({
         this.record();
         this.setState(getData());
     },
+    info() {
+        this.setState({
+            info: (this.state.info == 'on') ? 'off' : 'on'
+        });
+        this.update();
+    },
     toggle() {
         event.preventDefault();
         DayAction.record();
@@ -65,7 +71,7 @@ var Dashboard = React.createClass({
                 <div className="main">
                     <div className="big">
                         <div><span className={this.state.light}>●</span> Today</div>
-                        <div>{getTimeString(this.state.today)}</div>
+                        <div onClick={this.info} onTouchStart={this.info}>{getTimeString(this.state.today)}</div>
                     </div>
                 </div>
                 <div className="board">
@@ -80,6 +86,26 @@ var Dashboard = React.createClass({
                     <div className="remain time">
                         <div>Remain</div>
                         <div>{getTimeString(this.state.remain)}</div>
+                    </div>
+                </div>
+                <div className="info">
+                    <div className={this.state.info}>
+                        <div className="section">
+                            <div>A</div>
+                            <div>00:00</div>
+                        </div>
+                        <div className="section">
+                            <div>B</div>
+                            <div>00:00</div>
+                        </div>
+                        <div className="section">
+                            <div>C</div>
+                            <div>00:00</div>
+                        </div>
+                        <div className="section">
+                            <div>D</div>
+                            <div>00:00</div>
+                        </div>
                     </div>
                 </div>
             </div>
