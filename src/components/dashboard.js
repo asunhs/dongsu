@@ -49,17 +49,18 @@ var Dashboard = React.createClass({
         this.record();
         this.setState(getData());
     },
-    info() {
+    info(event) {
+        event.preventDefault();
         this.setState({
             info: (this.state.info == 'on') ? 'off' : 'on'
         });
         this.update();
     },
-    toggle() {
+    toggle(event) {
         event.preventDefault();
         DayAction.record();
     },
-    autoRecord() {
+    autoRecord(event) {
         event.preventDefault();
         DayAction.auto();
     },
