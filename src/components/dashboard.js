@@ -14,7 +14,7 @@ var todayId = DayStore.getTodayId(),
 function getData() {
     var total = DayStore.getTotal(),
         fulltime = DayStore.getFullWorkingHour(),
-        today = DayStore.get(todayId);
+        today = DayStore.get(todayId) || new Day();
 
     return {
         total: total,
@@ -60,7 +60,7 @@ var Dashboard = React.createClass({
         return (
             <div className="dashboard">
                 <div className={DayStore.isAutoRecord() ? 'hb auto clk' : 'hb auto clk off'} onClick={this.autoRecord} onTouchStart={this.autoRecord}>{ DayStore.isAutoRecord() ? 'AUTO' : 'MANUAL' }</div>
-                <div className={DayStore.isRecording() ? 'hb record clk' : 'hb record clk off'} onClick={this.toggle} onTouchStart={this.toggle}>{ DayStore.isRecording() ? 'RECODING' : 'STOP' }</div>
+                <div className={DayStore.isRecording() ? 'hb record clk' : 'hb record clk off'} onClick={this.toggle} onTouchStart={this.toggle}>{ DayStore.isRecording() ? 'RECODING' : 'STOPPED' }</div>
 
                 <div className="main">
                     <div className="big">

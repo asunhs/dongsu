@@ -57,13 +57,13 @@ div.dashboard div.time > div {
 }
 
 div.dashboard div.time > div:nth-child(1) {
-    width: 40%;
+    width: 60%;
     font-size: 0.8em;
     font-weight: bold;
 }
 
 div.dashboard div.time > div:nth-child(2) {
-    width: 60%;
+    width: 40%;
     font-size: 1.3em;
 }
 
@@ -104,10 +104,16 @@ table.timetable {
     width: 100%;
     border-spacing: 0;
     font-size: 0.95em;
+    padding: 0 5px;
 }
 
 table.timetable tr {
     height: 32px;
+}
+
+table.timetable th,
+table.timetable td{
+    padding: 0 3px;
 }
 
 table.timetable > tbody > tr > td:nth-child(2),
@@ -124,12 +130,17 @@ table.timetable tr.disabled input {
 
 table.timetable tr.today,
 table.timetable tr.today input {
-    background-color: #f6f6d4;
+    background-color: #fffeac;
+}
+
+table.timetable tr.today > td:first-child {
+    color: #b25555;
+    font-weight: bold;
 }
 
 table.timetable tr.expired,
 table.timetable tr.expired input {
-    background-color: #d4d4f6;
+    background-color: #61a2cc;
 }
 
 .clk {

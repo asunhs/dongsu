@@ -6,10 +6,14 @@ import {getTimeString} from '../utils/date.js';
 class Recorder {
     constructor() {
         this.recording = false;
-        this.targetId = DayStore.getTodayId()
+        this.targetId = DayStore.getTodayId();
     }
     set() {
         var targetId = this.targetId;
+
+        if (!targetId) {
+            return;
+        }
 
         if (this.recording) {
             return;

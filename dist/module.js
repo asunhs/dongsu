@@ -31268,7 +31268,7 @@ var todayId = _storesDayJs2['default'].getTodayId(),
 function getData() {
     var total = _storesDayJs2['default'].getTotal(),
         fulltime = _storesDayJs2['default'].getFullWorkingHour(),
-        today = _storesDayJs2['default'].get(todayId);
+        today = _storesDayJs2['default'].get(todayId) || new _modelsDayJs2['default']();
 
     return {
         total: total,
@@ -31323,7 +31323,7 @@ var Dashboard = _react2['default'].createClass({
             _react2['default'].createElement(
                 'div',
                 { className: _storesDayJs2['default'].isRecording() ? 'hb record clk' : 'hb record clk off', onClick: this.toggle, onTouchStart: this.toggle },
-                _storesDayJs2['default'].isRecording() ? 'RECODING' : 'STOP'
+                _storesDayJs2['default'].isRecording() ? 'RECODING' : 'STOPPED'
             ),
             _react2['default'].createElement(
                 'div',
@@ -32036,6 +32036,10 @@ var Recorder = (function () {
 
     Recorder.prototype.set = function set() {
         var targetId = this.targetId;
+
+        if (!targetId) {
+            return;
+        }
 
         if (this.recording) {
             return;
