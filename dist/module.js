@@ -31318,6 +31318,13 @@ var Dashboard = _react2['default'].createClass({
         _actionsDayJs2['default'].auto();
     },
     render: function render() {
+
+        var start = _utilsDateJs.getTime(this.state.today.start),
+            firstHalfEnd = _utilsDateJs.getTimeString(start + 4 * 60),
+            secondHalfStart = _utilsDateJs.getTimeString(start + 4 * 60 + 30),
+            reverseHour = _utilsDateJs.getTimeString(start + 8 * 60),
+            officeHour = _utilsDateJs.getTimeString(start + 9 * 60);
+
         return _react2['default'].createElement(
             'div',
             { className: 'dashboard' },
@@ -31349,7 +31356,7 @@ var Dashboard = _react2['default'].createClass({
                     ),
                     _react2['default'].createElement(
                         'div',
-                        { onClick: this.info, onTouchStart: this.info },
+                        { className: 'clk', onClick: this.info, onTouchStart: this.info },
                         _utilsDateJs.getTimeString(this.state.today)
                     )
                 )
@@ -31412,12 +31419,12 @@ var Dashboard = _react2['default'].createClass({
                         _react2['default'].createElement(
                             'div',
                             null,
-                            'A'
+                            '1st Half E'
                         ),
                         _react2['default'].createElement(
                             'div',
                             null,
-                            '00:00'
+                            firstHalfEnd
                         )
                     ),
                     _react2['default'].createElement(
@@ -31426,12 +31433,12 @@ var Dashboard = _react2['default'].createClass({
                         _react2['default'].createElement(
                             'div',
                             null,
-                            'B'
+                            '2nd Half S'
                         ),
                         _react2['default'].createElement(
                             'div',
                             null,
-                            '00:00'
+                            secondHalfStart
                         )
                     ),
                     _react2['default'].createElement(
@@ -31440,12 +31447,12 @@ var Dashboard = _react2['default'].createClass({
                         _react2['default'].createElement(
                             'div',
                             null,
-                            'C'
+                            'Reverse T'
                         ),
                         _react2['default'].createElement(
                             'div',
                             null,
-                            '00:00'
+                            reverseHour
                         )
                     ),
                     _react2['default'].createElement(
@@ -31454,12 +31461,12 @@ var Dashboard = _react2['default'].createClass({
                         _react2['default'].createElement(
                             'div',
                             null,
-                            'D'
+                            '2nd Half E'
                         ),
                         _react2['default'].createElement(
                             'div',
                             null,
-                            '00:00'
+                            officeHour
                         )
                     )
                 )

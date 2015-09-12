@@ -3,7 +3,7 @@ import React from 'react';
 import Day from '../models/day.js';
 import DayStore from '../stores/day.js';
 import DayAction from '../actions/day.js';
-import {getTimeString} from '../utils/date.js';
+import {getTime, getTimeString} from '../utils/date.js';
 import Recorder from '../utils/recorder.js';
 
 
@@ -63,6 +63,13 @@ var Dashboard = React.createClass({
         DayAction.auto();
     },
     render() {
+
+        var start = getTime(this.state.today.start),
+            firstHalfEnd = getTimeString(start + (4 * 60)),
+            secondHalfStart = getTimeString(start + (4 * 60) + 30),
+            reverseHour = getTimeString(start + (8 * 60)),
+            officeHour = getTimeString(start + (9 * 60));
+
         return (
             <div className="dashboard">
                 <div className={DayStore.isAutoRecord() ? 'hb auto clk' : 'hb auto clk off'} onClick={this.autoRecord} onTouchStart={this.autoRecord}>{ DayStore.isAutoRecord() ? 'AUTO' : 'MANUAL' }</div>
@@ -71,7 +78,7 @@ var Dashboard = React.createClass({
                 <div className="main">
                     <div className="big">
                         <div><span className={this.state.light}>●</span> Today</div>
-                        <div onClick={this.info} onTouchStart={this.info}>{getTimeString(this.state.today)}</div>
+                        <div className="clk" onClick={this.info} onTouchStart={this.info}>{getTimeString(this.state.today)}</div>
                     </div>
                 </div>
                 <div className="board">
@@ -91,20 +98,20 @@ var Dashboard = React.createClass({
                 <div className="info">
                     <div className={this.state.info}>
                         <div className="section">
-                            <div>A</div>
-                            <div>00:00</div>
+                            <div>1st Half E</div>
+                            <div>{firstHalfEnd}</div>
                         </div>
                         <div className="section">
-                            <div>B</div>
-                            <div>00:00</div>
+                            <div>2nd Half S</div>
+                            <div>{secondHalfStart}</div>
                         </div>
                         <div className="section">
-                            <div>C</div>
-                            <div>00:00</div>
+                            <div>Reverse T</div>
+                            <div>{reverseHour}</div>
                         </div>
                         <div className="section">
-                            <div>D</div>
-                            <div>00:00</div>
+                            <div>2nd Half E</div>
+                            <div>{officeHour}</div>
                         </div>
                     </div>
                 </div>
