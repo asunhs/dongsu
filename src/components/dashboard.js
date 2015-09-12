@@ -21,6 +21,7 @@ function getData() {
         fulltime: fulltime,
         remain: Math.max(fulltime - total, 0),
         today: today.getWorkedTime(),
+        start: getTime(today.start),
         light: today.getTrafficLight()
     };
 }
@@ -64,7 +65,7 @@ var Dashboard = React.createClass({
     },
     render() {
 
-        var start = getTime(this.state.today.start),
+        var start = this.state.start,
             firstHalfEnd = getTimeString(start + (4 * 60)),
             secondHalfStart = getTimeString(start + (4 * 60) + 30),
             reverseHour = getTimeString(start + (8 * 60)),

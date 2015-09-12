@@ -31275,6 +31275,7 @@ function getData() {
         fulltime: fulltime,
         remain: Math.max(fulltime - total, 0),
         today: today.getWorkedTime(),
+        start: _utilsDateJs.getTime(today.start),
         light: today.getTrafficLight()
     };
 }
@@ -31319,7 +31320,7 @@ var Dashboard = _react2['default'].createClass({
     },
     render: function render() {
 
-        var start = _utilsDateJs.getTime(this.state.today.start),
+        var start = this.state.start,
             firstHalfEnd = _utilsDateJs.getTimeString(start + 4 * 60),
             secondHalfStart = _utilsDateJs.getTimeString(start + 4 * 60 + 30),
             reverseHour = _utilsDateJs.getTimeString(start + 8 * 60),
