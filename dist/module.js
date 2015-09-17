@@ -31529,7 +31529,7 @@ var Dashboard = _react2['default'].createClass({
                     _react2['default'].createElement(
                         'div',
                         null,
-                        getRunningTime(this.state.total)
+                        holiday ? _utilsDateJs.getTimeString(this.state.total) : getRunningTime(this.state.total)
                     )
                 ),
                 _react2['default'].createElement(
@@ -31543,7 +31543,7 @@ var Dashboard = _react2['default'].createClass({
                     _react2['default'].createElement(
                         'div',
                         null,
-                        getRunningTime(this.state.remain)
+                        holiday ? _utilsDateJs.getTimeString(this.state.remain) : getRunningTime(this.state.remain)
                     )
                 )
             ),

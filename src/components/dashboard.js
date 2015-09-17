@@ -152,11 +152,11 @@ var Dashboard = React.createClass({
                     </div>
                     <div className="total time">
                         <div>Total</div>
-                        <div>{getRunningTime(this.state.total)}</div>
+                        <div>{holiday ? getTimeString(this.state.total) : getRunningTime(this.state.total)}</div>
                     </div>
                     <div className="remain time">
                         <div>Remain</div>
-                        <div>{getRunningTime(this.state.remain)}</div>
+                        <div>{holiday ? getTimeString(this.state.remain) : getRunningTime(this.state.remain)}</div>
                     </div>
                 </div>
                 {getInfo()}
