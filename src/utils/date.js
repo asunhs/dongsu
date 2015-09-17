@@ -36,12 +36,11 @@ function getDiff(start, end) {
 
 function getCurrentWeek() {
     var today = new Date(),
-        date = today.getDate(),
-        day = today.getDay();
+        sat = today.getDate() - (today.getDay() + 1);
 
-    return _.map([5,4,3,2,1], i => {
+    return _.map([6,5,4,3,2,1,0], i => {
         var d = new Date();
-        d.setDate(date - day + i);
+        d.setDate(sat + i);
         d.setHours(0,0,0,0);
         return d;
     });

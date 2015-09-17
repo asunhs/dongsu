@@ -16,7 +16,7 @@ class Day {
         var diff = time.getTime() - now.getTime();
 
         this.date = time.getTime();
-        this.workingHour = _.isNumber(workingHour) ? workingHour : 8;
+        this.workingHour = _.isNumber(workingHour) ? workingHour : (time.getDay() == 0 || time.getDay() == 6) ? 0 : 8;
 
         if (diff > 0) {
             this.state = Day.NOT_YET;
@@ -57,13 +57,26 @@ class Day {
         if (this.isNotYet()) {
             return 0;
         }
-        if (!this.workingHour) {
-            return 0;
-        }
         return getDiff(getTime(this.start), getTime(this.end));
     }
+    getState() {
+        if (this.isNotYet()) {
+            return 'disabled';
+        } else if (this.today) {
+            return 'today';
+        } else if (!this.workingHour) {
+            return 'holiday';
+        } else {
+            return 'expired';
+        }
+    }
     getWorkedTime() {
+
         var diff = this.getDiff();
+
+        if (!this.workingHour) {
+            return diff;
+        }
 
         if (diff >= 480) {
             return diff - 60;
@@ -88,20 +101,30 @@ class Day {
     }
     getOvertimeLevel() {
 
-        if (this.workingHour < 8) {
-            return 0;
-        }
-
         var diff = this.getDiff();
 
-        if (diff >= 900) {
-            return 3;
-        } else if (diff >= 780) {
-            return 2;
-        } else if (diff >= 660) {
-            return 1;
-        } else {
+        if (!this.workingHour) {
+            if (diff >= 480) {
+                return 4;
+            } else if (diff >= 360) {
+                return 3;
+            } else if (diff >= 240) {
+                return 2;
+            } else {
+                return 0;
+            }
+        } else if (this.workingHour < 8) {
             return 0;
+        } else {
+            if (diff >= 900) {
+                return 3;
+            } else if (diff >= 780) {
+                return 2;
+            } else if (diff >= 660) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
     }
     isNotYet() {

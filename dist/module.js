@@ -31551,9 +31551,8 @@ var Day = _react2['default'].createClass({
     render: function render() {
 
         var day = this.state.day,
-            disabled = !day.workingHour || day.isNotYet(),
             overtimeLevel = day.getOvertimeLevel(),
-            state = disabled ? 'disabled' : day.today ? 'today' : 'expired';
+            state = day.getState();
 
         return _react2['default'].createElement(
             'tr',
@@ -31566,12 +31565,12 @@ var Day = _react2['default'].createClass({
             _react2['default'].createElement(
                 'td',
                 null,
-                _react2['default'].createElement('input', { type: 'time', disabled: disabled, value: day.start, onChange: this.handleStart })
+                _react2['default'].createElement('input', { type: 'time', disabled: day.isNotYet(), value: day.start, onChange: this.handleStart })
             ),
             _react2['default'].createElement(
                 'td',
                 null,
-                _react2['default'].createElement('input', { type: 'time', disabled: disabled, value: day.end, onChange: this.handleEnd })
+                _react2['default'].createElement('input', { type: 'time', disabled: day.isNotYet(), value: day.end, onChange: this.handleEnd })
             ),
             _react2['default'].createElement(
                 'td',
@@ -31583,7 +31582,7 @@ var Day = _react2['default'].createClass({
                 { className: 'clk', onClick: this.toggle, onTouchStart: this.toggle },
                 _react2['default'].createElement(
                     'span',
-                    { className: disabled ? 'disabled' : '' },
+                    null,
                     day.workingHour,
                     'h'
                 ),
@@ -31761,7 +31760,7 @@ var Day = (function () {
         var diff = time.getTime() - now.getTime();
 
         this.date = time.getTime();
-        this.workingHour = _underscore2['default'].isNumber(workingHour) ? workingHour : 8;
+        this.workingHour = _underscore2['default'].isNumber(workingHour) ? workingHour : time.getDay() == 0 || time.getDay() == 6 ? 0 : 8;
 
         if (diff > 0) {
             this.state = Day.NOT_YET;
@@ -31806,14 +31805,28 @@ var Day = (function () {
         if (this.isNotYet()) {
             return 0;
         }
-        if (!this.workingHour) {
-            return 0;
-        }
         return _utilsDateJs.getDiff(_utilsDateJs.getTime(this.start), _utilsDateJs.getTime(this.end));
     };
 
+    Day.prototype.getState = function getState() {
+        if (this.isNotYet()) {
+            return 'disabled';
+        } else if (this.today) {
+            return 'today';
+        } else if (!this.workingHour) {
+            return 'holiday';
+        } else {
+            return 'expired';
+        }
+    };
+
     Day.prototype.getWorkedTime = function getWorkedTime() {
+
         var diff = this.getDiff();
+
+        if (!this.workingHour) {
+            return diff;
+        }
 
         if (diff >= 480) {
             return diff - 60;
@@ -31840,20 +31853,30 @@ var Day = (function () {
 
     Day.prototype.getOvertimeLevel = function getOvertimeLevel() {
 
-        if (this.workingHour < 8) {
-            return 0;
-        }
-
         var diff = this.getDiff();
 
-        if (diff >= 900) {
-            return 3;
-        } else if (diff >= 780) {
-            return 2;
-        } else if (diff >= 660) {
-            return 1;
-        } else {
+        if (!this.workingHour) {
+            if (diff >= 480) {
+                return 4;
+            } else if (diff >= 360) {
+                return 3;
+            } else if (diff >= 240) {
+                return 2;
+            } else {
+                return 0;
+            }
+        } else if (this.workingHour < 8) {
             return 0;
+        } else {
+            if (diff >= 900) {
+                return 3;
+            } else if (diff >= 780) {
+                return 2;
+            } else if (diff >= 660) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
     };
 
@@ -31978,9 +32001,11 @@ var days = loadDays(),
         return days;
     },
     getTotal: function getTotal() {
-        return _underscore2['default'].reduce(days, function (sum, day) {
+        return _underscore2['default'].chain(days).filter(function (day) {
+            return day.workingHour > 0;
+        }).reduce(function (sum, day) {
             return sum + day.getWorkedTime();
-        }, 0);
+        }, 0).value();
     },
     getFullWorkingHour: function getFullWorkingHour() {
         return _underscore2['default'].reduce(days, function (sum, day) {
@@ -32079,12 +32104,11 @@ function getDiff(start, end) {
 
 function getCurrentWeek() {
     var today = new Date(),
-        date = today.getDate(),
-        day = today.getDay();
+        sat = today.getDate() - (today.getDay() + 1);
 
-    return _underscore2['default'].map([5, 4, 3, 2, 1], function (i) {
+    return _underscore2['default'].map([6, 5, 4, 3, 2, 1, 0], function (i) {
         var d = new Date();
-        d.setDate(date - day + i);
+        d.setDate(sat + i);
         d.setHours(0, 0, 0, 0);
         return d;
     });

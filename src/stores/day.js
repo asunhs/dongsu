@@ -47,7 +47,7 @@ var days = loadDays(),
             return days;
         },
         getTotal() {
-            return _.reduce(days, (sum, day) => sum + day.getWorkedTime(), 0);
+            return _.chain(days).filter(day => day.workingHour > 0).reduce((sum, day) => sum + day.getWorkedTime(), 0).value();
         },
         getFullWorkingHour() {
             return _.reduce(days, (sum, day) => sum + day.getWorkingMinute(), 0);

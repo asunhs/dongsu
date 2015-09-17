@@ -158,6 +158,11 @@ table.timetable tr.disabled input {
     background-color: #d4d4d4;
 }
 
+table.timetable tr.holiday,
+table.timetable tr.holiday input {
+    background-color: #d4d4d4;
+}
+
 table.timetable tr.today,
 table.timetable tr.today input {
     background-color: #f7ffbc;

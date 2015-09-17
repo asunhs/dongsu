@@ -37,17 +37,16 @@ var Day = React.createClass({
     render() {
 
         var day = this.state.day,
-            disabled = !day.workingHour || day.isNotYet(),
             overtimeLevel = day.getOvertimeLevel(),
-            state = disabled ? 'disabled' : day.today ? 'today' : 'expired';
+            state = day.getState();
 
         return (
             <tr className={state}>
                 <td>{day.getDateString()}</td>
-                <td><input type="time" disabled={disabled} value={day.start} onChange={this.handleStart}/></td>
-                <td><input type="time" disabled={disabled} value={day.end} onChange={this.handleEnd}/></td>
+                <td><input type="time" disabled={day.isNotYet()} value={day.start} onChange={this.handleStart}/></td>
+                <td><input type="time" disabled={day.isNotYet()} value={day.end} onChange={this.handleEnd}/></td>
                 <td>{getTimeString(day.getWorkedTime())}</td>
-                <td className="clk" onClick={this.toggle} onTouchStart={this.toggle}><span className={ disabled ? 'disabled' : '' }>{day.workingHour}h</span>{overtimeLevel ? '+' + (overtimeLevel * 2) +'h' : ''}</td>
+                <td className="clk" onClick={this.toggle} onTouchStart={this.toggle}><span>{day.workingHour}h</span>{overtimeLevel ? '+' + (overtimeLevel * 2) +'h' : ''}</td>
             </tr>
         );
     }
