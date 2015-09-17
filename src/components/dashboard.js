@@ -20,6 +20,7 @@ function getData() {
         total: total,
         fulltime: fulltime,
         remain: Math.max(fulltime - total, 0),
+        holiday: !today.workingHour,
         today: today.getWorkedTime(),
         start: getTime(today.start),
         light: today.getTrafficLight()
@@ -77,12 +78,61 @@ var Dashboard = React.createClass({
     render() {
 
         var start = this.state.start,
-            firstHalfEnd = getTimeString(start + (4 * 60)),
-            secondHalfStart = getTimeString(start + (4 * 60) + 30),
-            reverseHour = getTimeString(start + (8 * 60)),
-            officeHour = getTimeString(start + (9 * 60));
+            holiday = this.state.holiday,
+            info = this.state.info;
 
         tick = !tick;
+
+        function getInfo() {
+
+            if (holiday) {
+                return (
+                    <div className="info">
+                        <div className={info}>
+                            <div className="section">
+                                <div>4 Hour</div>
+                                <div>{getTimeString(start + (4 * 60))}</div>
+                            </div>
+                            <div className="section">
+                                <div>6 Hour</div>
+                                <div>{getTimeString(start + (6 * 60))}</div>
+                            </div>
+                            <div className="section">
+                                <div>8 Hour</div>
+                                <div>{getTimeString(start + (8 * 60))}</div>
+                            </div>
+                            <div className="section">
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            } else {
+                return (
+                    <div className="info">
+                        <div className={info}>
+                            <div className="section">
+                                <div>1st Half E</div>
+                                <div>{getTimeString(start + (4 * 60))}</div>
+                            </div>
+                            <div className="section">
+                                <div>2nd Half S</div>
+                                <div>{getTimeString(start + (4 * 60) + 30)}</div>
+                            </div>
+                            <div className="section">
+                                <div>Reverse T</div>
+                                <div>{getTimeString(start + (8 * 60))}</div>
+                            </div>
+                            <div className="section">
+                                <div>2nd Half E</div>
+                                <div>{getTimeString(start + (9 * 60))}</div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+        }
 
         return (
             <div className="dashboard">
@@ -109,26 +159,7 @@ var Dashboard = React.createClass({
                         <div>{getRunningTime(this.state.remain)}</div>
                     </div>
                 </div>
-                <div className="info">
-                    <div className={this.state.info}>
-                        <div className="section">
-                            <div>1st Half E</div>
-                            <div>{firstHalfEnd}</div>
-                        </div>
-                        <div className="section">
-                            <div>2nd Half S</div>
-                            <div>{secondHalfStart}</div>
-                        </div>
-                        <div className="section">
-                            <div>Reverse T</div>
-                            <div>{reverseHour}</div>
-                        </div>
-                        <div className="section">
-                            <div>2nd Half E</div>
-                            <div>{officeHour}</div>
-                        </div>
-                    </div>
-                </div>
+                {getInfo()}
             </div>
         );
     }

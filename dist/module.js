@@ -31274,6 +31274,7 @@ function getData() {
         total: total,
         fulltime: fulltime,
         remain: Math.max(fulltime - total, 0),
+        holiday: !today.workingHour,
         today: today.getWorkedTime(),
         start: _utilsDateJs.getTime(today.start),
         light: today.getTrafficLight()
@@ -31332,12 +31333,137 @@ var Dashboard = _react2['default'].createClass({
     render: function render() {
 
         var start = this.state.start,
-            firstHalfEnd = _utilsDateJs.getTimeString(start + 4 * 60),
-            secondHalfStart = _utilsDateJs.getTimeString(start + 4 * 60 + 30),
-            reverseHour = _utilsDateJs.getTimeString(start + 8 * 60),
-            officeHour = _utilsDateJs.getTimeString(start + 9 * 60);
+            holiday = this.state.holiday,
+            info = this.state.info;
 
         tick = !tick;
+
+        function getInfo() {
+
+            if (holiday) {
+                return _react2['default'].createElement(
+                    'div',
+                    { className: 'info' },
+                    _react2['default'].createElement(
+                        'div',
+                        { className: info },
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'section' },
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                '4 Hour'
+                            ),
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                _utilsDateJs.getTimeString(start + 4 * 60)
+                            )
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'section' },
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                '6 Hour'
+                            ),
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                _utilsDateJs.getTimeString(start + 6 * 60)
+                            )
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'section' },
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                '8 Hour'
+                            ),
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                _utilsDateJs.getTimeString(start + 8 * 60)
+                            )
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'section' },
+                            _react2['default'].createElement('div', null),
+                            _react2['default'].createElement('div', null)
+                        )
+                    )
+                );
+            } else {
+                return _react2['default'].createElement(
+                    'div',
+                    { className: 'info' },
+                    _react2['default'].createElement(
+                        'div',
+                        { className: info },
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'section' },
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                '1st Half E'
+                            ),
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                _utilsDateJs.getTimeString(start + 4 * 60)
+                            )
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'section' },
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                '2nd Half S'
+                            ),
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                _utilsDateJs.getTimeString(start + 4 * 60 + 30)
+                            )
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'section' },
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                'Reverse T'
+                            ),
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                _utilsDateJs.getTimeString(start + 8 * 60)
+                            )
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'section' },
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                '2nd Half E'
+                            ),
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                _utilsDateJs.getTimeString(start + 9 * 60)
+                            )
+                        )
+                    )
+                );
+            }
+        }
 
         return _react2['default'].createElement(
             'div',
@@ -31421,70 +31547,7 @@ var Dashboard = _react2['default'].createClass({
                     )
                 )
             ),
-            _react2['default'].createElement(
-                'div',
-                { className: 'info' },
-                _react2['default'].createElement(
-                    'div',
-                    { className: this.state.info },
-                    _react2['default'].createElement(
-                        'div',
-                        { className: 'section' },
-                        _react2['default'].createElement(
-                            'div',
-                            null,
-                            '1st Half E'
-                        ),
-                        _react2['default'].createElement(
-                            'div',
-                            null,
-                            firstHalfEnd
-                        )
-                    ),
-                    _react2['default'].createElement(
-                        'div',
-                        { className: 'section' },
-                        _react2['default'].createElement(
-                            'div',
-                            null,
-                            '2nd Half S'
-                        ),
-                        _react2['default'].createElement(
-                            'div',
-                            null,
-                            secondHalfStart
-                        )
-                    ),
-                    _react2['default'].createElement(
-                        'div',
-                        { className: 'section' },
-                        _react2['default'].createElement(
-                            'div',
-                            null,
-                            'Reverse T'
-                        ),
-                        _react2['default'].createElement(
-                            'div',
-                            null,
-                            reverseHour
-                        )
-                    ),
-                    _react2['default'].createElement(
-                        'div',
-                        { className: 'section' },
-                        _react2['default'].createElement(
-                            'div',
-                            null,
-                            '2nd Half E'
-                        ),
-                        _react2['default'].createElement(
-                            'div',
-                            null,
-                            officeHour
-                        )
-                    )
-                )
-            )
+            getInfo()
         );
     }
 });
