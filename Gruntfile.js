@@ -22,6 +22,12 @@ module.exports = function (grunt) {
             css: {
                 src: "src/main.css",
                 dest: "dist/main.css"
+            },
+            img: {
+                dest: 'dist/img',
+                src:['**/*'],
+                cwd: 'src/img',
+                expand: true
             }
         },
         watch: {
