@@ -32112,6 +32112,7 @@ var days = loadDays(),
             case _actionsActionsJs2['default'].AUTO_RECORD_TOGGLE:
                 {
                     autoRecord = !autoRecord;
+                    recording = autoRecord;
                     DayStore.emitChange();
                     break;
                 }
