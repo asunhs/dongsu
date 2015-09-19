@@ -32168,7 +32168,7 @@ function getDiff(start, end) {
 
 function getCurrentWeek() {
     var today = new Date(),
-        sat = today.getDate() - (today.getDay() + 1);
+        sat = today.getDate() - (today.getDay() + 1) % 7;
 
     return _underscore2['default'].map([6, 5, 4, 3, 2, 1, 0], function (i) {
         var d = new Date();
