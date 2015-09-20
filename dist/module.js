@@ -31700,8 +31700,30 @@ var Days = _react2['default'].createClass({
             days: _storesDayJs2['default'].getAll()
         });
     },
+    toggle: function toggle(event) {
+        event.preventDefault();
+        this.setState({
+            prev: !this.state.prev
+        });
+    },
 
     render: function render() {
+
+        var days = this.state.days,
+            prev = !!this.state.prev;
+
+        function getDays() {
+            if (prev) {
+                return _underscore2['default'].map(days, function (day, index) {
+                    return _react2['default'].createElement(_dayJs2['default'], { key: index, id: index });
+                });
+            }
+
+            return _underscore2['default'].map(days.slice(0, 7), function (day, index) {
+                return _react2['default'].createElement(_dayJs2['default'], { key: index, id: index });
+            });
+        }
+
         return _react2['default'].createElement(
             'table',
             { className: 'timetable' },
@@ -31741,9 +31763,16 @@ var Days = _react2['default'].createClass({
             _react2['default'].createElement(
                 'tbody',
                 null,
-                _underscore2['default'].map(this.state.days, function (day, index) {
-                    return _react2['default'].createElement(_dayJs2['default'], { key: index, id: index });
-                })
+                getDays(),
+                _react2['default'].createElement(
+                    'tr',
+                    null,
+                    _react2['default'].createElement(
+                        'td',
+                        { colSpan: '5', onClick: this.toggle, onTouchStart: this.toggle },
+                        prev ? 'Close' : 'More'
+                    )
+                )
             )
         );
     }
@@ -32168,11 +32197,11 @@ function getDiff(start, end) {
 
 function getCurrentWeek() {
     var today = new Date(),
-        sat = today.getDate() - (today.getDay() + 1) % 7;
+        sun = today.getDate() - (today.getDay() + 6) % 7 - 7;
 
-    return _underscore2['default'].map([6, 5, 4, 3, 2, 1, 0], function (i) {
+    return _underscore2['default'].map([13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0], function (i) {
         var d = new Date();
-        d.setDate(sat + i);
+        d.setDate(sun + i);
         d.setHours(0, 0, 0, 0);
         return d;
     });
