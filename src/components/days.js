@@ -63,7 +63,7 @@ var Days = React.createClass({
                     <tr>
                         <td colSpan="5" onClick={this.toggle} onTouchStart={this.toggle}>{prev ? 'Close' : 'More'}</td>
                     </tr>
-                </tfoot>>
+                </tfoot>
             </table>
         );
     }

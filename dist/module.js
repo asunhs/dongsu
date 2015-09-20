@@ -31777,8 +31777,7 @@ var Days = _react2['default'].createClass({
                         prev ? 'Close' : 'More'
                     )
                 )
-            ),
-            '>'
+            )
         );
     }
 });
