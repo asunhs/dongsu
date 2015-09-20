@@ -178,8 +178,10 @@ table.timetable tr.expired input {
     background-color: #a2beda;
 }
 
-table.timetable tr:last-child > td {
+table.timetable > tfoot > tr:last-child > td {
     font-weight: bold;
+    text-align: center;
+    padding: 15px;
 }
 
 .clk {

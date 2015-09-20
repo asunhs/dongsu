@@ -31763,7 +31763,11 @@ var Days = _react2['default'].createClass({
             _react2['default'].createElement(
                 'tbody',
                 null,
-                getDays(),
+                getDays()
+            ),
+            _react2['default'].createElement(
+                'tfoot',
+                null,
                 _react2['default'].createElement(
                     'tr',
                     null,
@@ -31773,7 +31777,8 @@ var Days = _react2['default'].createClass({
                         prev ? 'Close' : 'More'
                     )
                 )
-            )
+            ),
+            '>'
         );
     }
 });
