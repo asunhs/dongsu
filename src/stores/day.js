@@ -43,14 +43,17 @@ var days = loadDays(),
         get(index) {
             return days[index];
         },
+        getThisWeek() {
+            return days.slice(0,7);
+        },
         getAll() {
             return days;
         },
         getTotal() {
-            return _.chain(days).filter(day => day.workingHour > 0).reduce((sum, day) => sum + day.getWorkedTime(), 0).value();
+            return _.chain(this.getThisWeek()).filter(day => day.workingHour > 0).reduce((sum, day) => sum + day.getWorkedTime(), 0).value();
         },
         getFullWorkingHour() {
-            return _.reduce(days, (sum, day) => sum + day.getWorkingMinute(), 0);
+            return _.reduce(this.getThisWeek(), (sum, day) => sum + day.getWorkingMinute(), 0);
         },
         getTodayId() {
             return _.findIndex(days, {

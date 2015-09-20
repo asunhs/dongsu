@@ -32093,18 +32093,21 @@ var days = loadDays(),
     get: function get(index) {
         return days[index];
     },
+    getThisWeek: function getThisWeek() {
+        return days.slice(0, 7);
+    },
     getAll: function getAll() {
         return days;
     },
     getTotal: function getTotal() {
-        return _underscore2['default'].chain(days).filter(function (day) {
+        return _underscore2['default'].chain(this.getThisWeek()).filter(function (day) {
             return day.workingHour > 0;
         }).reduce(function (sum, day) {
             return sum + day.getWorkedTime();
         }, 0).value();
     },
     getFullWorkingHour: function getFullWorkingHour() {
-        return _underscore2['default'].reduce(days, function (sum, day) {
+        return _underscore2['default'].reduce(this.getThisWeek(), function (sum, day) {
             return sum + day.getWorkingMinute();
         }, 0);
     },
