@@ -28,6 +28,12 @@ module.exports = function (grunt) {
                 src:['**/*'],
                 cwd: 'src/img',
                 expand: true
+            },
+            font: {
+                dest: 'dist/font',
+                src:['**/*'],
+                cwd: 'src/font',
+                expand: true
             }
         },
         watch: {

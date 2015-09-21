@@ -5,5 +5,5 @@ dist/main.css
 dist/module.js
 dist/img/dongsu_lg.png
 dist/img/dongsu_sm.png
-https://fonts.gstatic.com/s/opensanscondensed/v10/gk5FxslNkTTHtojXrkp-xGAzD5WKQVN4wSyA0MYYi4rr7w4p9aSvGirXi6XmeXNA.woff
-https://fonts.gstatic.com/s/opensanscondensed/v10/gk5FxslNkTTHtojXrkp-xGAzD5WKQVN4wSyA0MYYi4rr7w4p9aSvGirXi6XmeXNA.woff
+dist/font/OpenSansCondensedLight.woff
+dist/font/OpenSansCondensedBold.woff
