@@ -153,6 +153,10 @@ table.timetable > tbody > tr > td:nth-child(4) {
 }
 
 
+table.timetable tr.prev {
+    opacity: 0.5;
+}
+
 table.timetable tr.disabled,
 table.timetable tr.disabled input {
     background-color: #d4d4d4;

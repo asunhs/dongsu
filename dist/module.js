@@ -31595,6 +31595,11 @@ var Day = _react2['default'].createClass({
     },
     toggle: function toggle(event) {
         event.preventDefault();
+
+        if (this.props.disabled) {
+            return;
+        }
+
         _actionsDayJs2['default'].toggle(this.props.id);
     },
     handleStart: function handleStart(event) {
@@ -31615,11 +31620,12 @@ var Day = _react2['default'].createClass({
 
         var day = this.state.day,
             overtimeLevel = day.getOvertimeLevel(),
-            state = day.getState();
+            state = day.getState(),
+            disabled = this.props.disabled ? ' prev' : '';
 
         return _react2['default'].createElement(
             'tr',
-            { className: state },
+            { className: state + disabled },
             _react2['default'].createElement(
                 'td',
                 null,
@@ -31628,12 +31634,12 @@ var Day = _react2['default'].createClass({
             _react2['default'].createElement(
                 'td',
                 null,
-                _react2['default'].createElement('input', { type: 'time', disabled: day.isNotYet(), value: day.start, onChange: this.handleStart })
+                _react2['default'].createElement('input', { type: 'time', disabled: day.isNotYet() || this.props.disabled, value: day.start, onChange: this.handleStart })
             ),
             _react2['default'].createElement(
                 'td',
                 null,
-                _react2['default'].createElement('input', { type: 'time', disabled: day.isNotYet(), value: day.end, onChange: this.handleEnd })
+                _react2['default'].createElement('input', { type: 'time', disabled: day.isNotYet() || this.props.disabled, value: day.end, onChange: this.handleEnd })
             ),
             _react2['default'].createElement(
                 'td',
@@ -31686,7 +31692,8 @@ var Days = _react2['default'].createClass({
 
     getInitialState: function getInitialState() {
         return {
-            days: _storesDayJs2['default'].getAll()
+            curr: _storesDayJs2['default'].getThisWeek(),
+            prev: _storesDayJs2['default'].getPrevWeek()
         };
     },
     componentDidMount: function componentDidMount() {
@@ -31697,31 +31704,36 @@ var Days = _react2['default'].createClass({
     },
     update: function update() {
         this.setState({
-            days: _storesDayJs2['default'].getAll()
+            curr: _storesDayJs2['default'].getThisWeek(),
+            prev: _storesDayJs2['default'].getPrevWeek()
         });
     },
     toggle: function toggle(event) {
         event.preventDefault();
         this.setState({
-            prev: !this.state.prev
+            more: !this.state.more
         });
     },
 
     render: function render() {
 
-        var days = this.state.days,
-            prev = !!this.state.prev;
+        var curr = this.state.curr,
+            prev = this.state.prev,
+            more = !!this.state.more;
 
         function getDays() {
-            if (prev) {
-                return _underscore2['default'].map(days, function (day, index) {
-                    return _react2['default'].createElement(_dayJs2['default'], { key: index, id: index });
-                });
-            }
 
-            return _underscore2['default'].map(days.slice(0, 7), function (day, index) {
+            var thisWeek = _underscore2['default'].map(curr, function (day, index) {
                 return _react2['default'].createElement(_dayJs2['default'], { key: index, id: index });
             });
+
+            if (more) {
+                return _underscore2['default'].union(thisWeek, _underscore2['default'].map(prev, function (day, index) {
+                    return _react2['default'].createElement(_dayJs2['default'], { key: index + 7, id: index + 7, disabled: true });
+                }));
+            }
+
+            return thisWeek;
         }
 
         return _react2['default'].createElement(
@@ -31774,7 +31786,7 @@ var Days = _react2['default'].createClass({
                     _react2['default'].createElement(
                         'td',
                         { colSpan: '5', onClick: this.toggle, onTouchStart: this.toggle },
-                        prev ? 'Close' : 'More'
+                        more ? 'Close' : 'More'
                     )
                 )
             )
@@ -32095,6 +32107,9 @@ var days = loadDays(),
     },
     getThisWeek: function getThisWeek() {
         return days.slice(0, 7);
+    },
+    getPrevWeek: function getPrevWeek() {
+        return days.slice(7, 14);
     },
     getAll: function getAll() {
         return days;

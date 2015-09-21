@@ -46,6 +46,9 @@ var days = loadDays(),
         getThisWeek() {
             return days.slice(0,7);
         },
+        getPrevWeek() {
+            return days.slice(7,14);
+        },
         getAll() {
             return days;
         },

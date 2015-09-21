@@ -7,7 +7,8 @@ import Day from './day.js';
 var Days = React.createClass({
     getInitialState() {
         return {
-            days: DayStore.getAll()
+            curr: DayStore.getThisWeek(),
+            prev: DayStore.getPrevWeek()
         };
     },
     componentDidMount() {
@@ -18,31 +19,36 @@ var Days = React.createClass({
     },
     update() {
         this.setState({
-            days: DayStore.getAll()
+            curr: DayStore.getThisWeek(),
+            prev: DayStore.getPrevWeek()
         });
     },
     toggle(event) {
         event.preventDefault();
         this.setState({
-            prev: !this.state.prev
+            more: !this.state.more
         });
     },
 
     render() {
 
-        var days = this.state.days,
-            prev = !!this.state.prev;
+        var curr = this.state.curr,
+            prev = this.state.prev,
+            more = !!this.state.more;
 
         function getDays() {
-            if (prev) {
-                return _.map(days, (day, index) => {
-                    return <Day key={index} id={index}/>
-                });
-            }
 
-            return _.map(days.slice(0,7), (day, index) => {
+            var thisWeek = _.map(curr, (day, index) => {
                 return <Day key={index} id={index}/>
             });
+
+            if (more) {
+                return _.union(thisWeek, _.map(prev, (day, index) => {
+                    return <Day key={index + 7} id={index + 7} disabled={true}/>
+                }));
+            }
+
+            return thisWeek;
         }
 
         return (
@@ -61,7 +67,7 @@ var Days = React.createClass({
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colSpan="5" onClick={this.toggle} onTouchStart={this.toggle}>{prev ? 'Close' : 'More'}</td>
+                        <td colSpan="5" onClick={this.toggle} onTouchStart={this.toggle}>{more ? 'Close' : 'More'}</td>
                     </tr>
                 </tfoot>
             </table>

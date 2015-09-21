@@ -18,6 +18,11 @@ var Day = React.createClass({
     },
     toggle(event) {
         event.preventDefault();
+
+        if (this.props.disabled) {
+            return;
+        }
+
         DayAction.toggle(this.props.id);
     },
     handleStart(event) {
@@ -38,13 +43,14 @@ var Day = React.createClass({
 
         var day = this.state.day,
             overtimeLevel = day.getOvertimeLevel(),
-            state = day.getState();
+            state = day.getState(),
+            disabled = this.props.disabled ? ' prev' : '';
 
         return (
-            <tr className={state}>
+            <tr className={state + disabled}>
                 <td>{day.getDateString()}</td>
-                <td><input type="time" disabled={day.isNotYet()} value={day.start} onChange={this.handleStart}/></td>
-                <td><input type="time" disabled={day.isNotYet()} value={day.end} onChange={this.handleEnd}/></td>
+                <td><input type="time" disabled={day.isNotYet() || this.props.disabled} value={day.start} onChange={this.handleStart}/></td>
+                <td><input type="time" disabled={day.isNotYet() || this.props.disabled} value={day.end} onChange={this.handleEnd}/></td>
                 <td>{getTimeString(day.getWorkedTime())}</td>
                 <td className="clk" onClick={this.toggle} onTouchStart={this.toggle}><span>{day.workingHour}h</span>{overtimeLevel ? '+' + (overtimeLevel * 2) +'h' : ''}</td>
             </tr>
