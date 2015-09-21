@@ -5,3 +5,6 @@ dist/main.css
 dist/module.js
 dist/img/dongsu_lg.png
 dist/img/dongsu_sm.png
+
+NETWORK:
+https://fonts.googleapis.com/css
