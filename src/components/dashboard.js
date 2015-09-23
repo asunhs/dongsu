@@ -79,6 +79,7 @@ var Dashboard = React.createClass({
 
         var start = this.state.start,
             holiday = this.state.holiday,
+            today = this.state.today,
             info = this.state.info;
 
         tick = !tick;
@@ -100,6 +101,29 @@ var Dashboard = React.createClass({
                             <div className="section">
                                 <div>8 Hour</div>
                                 <div>{getTimeString(start + (8 * 60))}</div>
+                            </div>
+                            <div className="section">
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            } else if (today >= 480) {
+                return (
+                    <div className="info">
+                        <div className={info}>
+                            <div className="section">
+                                <div>Over 2 Hour</div>
+                                <div>{getTimeString(start + (11 * 60))}</div>
+                            </div>
+                            <div className="section">
+                                <div>Over 4 Hour</div>
+                                <div>{getTimeString(start + (13 * 60))}</div>
+                            </div>
+                            <div className="section">
+                                <div>Over 6 Hour</div>
+                                <div>{getTimeString(start + (15 * 60))}</div>
                             </div>
                             <div className="section">
                                 <div></div>
@@ -142,7 +166,7 @@ var Dashboard = React.createClass({
                 <div className="main">
                     <div className="big">
                         <div><span className={this.state.light}>●</span> Today</div>
-                        <div className="clk" onClick={this.info} onTouchStart={this.info}>{getRunningTime(this.state.today)}</div>
+                        <div className="clk" onClick={this.info} onTouchStart={this.info}>{getRunningTime(today)}</div>
                     </div>
                 </div>
                 <div className="board">

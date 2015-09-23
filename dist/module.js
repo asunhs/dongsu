@@ -31334,6 +31334,7 @@ var Dashboard = _react2['default'].createClass({
 
         var start = this.state.start,
             holiday = this.state.holiday,
+            today = this.state.today,
             info = this.state.info;
 
         tick = !tick;
@@ -31387,6 +31388,63 @@ var Dashboard = _react2['default'].createClass({
                                 'div',
                                 null,
                                 _utilsDateJs.getTimeString(start + 8 * 60)
+                            )
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'section' },
+                            _react2['default'].createElement('div', null),
+                            _react2['default'].createElement('div', null)
+                        )
+                    )
+                );
+            } else if (today >= 480) {
+                return _react2['default'].createElement(
+                    'div',
+                    { className: 'info' },
+                    _react2['default'].createElement(
+                        'div',
+                        { className: info },
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'section' },
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                'Over 2 Hour'
+                            ),
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                _utilsDateJs.getTimeString(start + 11 * 60)
+                            )
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'section' },
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                'Over 4 Hour'
+                            ),
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                _utilsDateJs.getTimeString(start + 13 * 60)
+                            )
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'section' },
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                'Over 6 Hour'
+                            ),
+                            _react2['default'].createElement(
+                                'div',
+                                null,
+                                _utilsDateJs.getTimeString(start + 15 * 60)
                             )
                         ),
                         _react2['default'].createElement(
@@ -31497,7 +31555,7 @@ var Dashboard = _react2['default'].createClass({
                     _react2['default'].createElement(
                         'div',
                         { className: 'clk', onClick: this.info, onTouchStart: this.info },
-                        getRunningTime(this.state.today)
+                        getRunningTime(today)
                     )
                 )
             ),
