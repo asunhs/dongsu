@@ -31274,10 +31274,7 @@ function getData() {
         total: total,
         fulltime: fulltime,
         remain: Math.max(fulltime - total, 0),
-        holiday: !today.workingHour,
-        today: today.getWorkedTime(),
-        start: _utilsDateJs.getTime(today.start),
-        light: today.getTrafficLight()
+        today: today
     };
 }
 
@@ -31332,10 +31329,13 @@ var Dashboard = _react2['default'].createClass({
     },
     render: function render() {
 
-        var start = this.state.start,
-            holiday = this.state.holiday,
-            today = this.state.today,
-            overtime = today - 480,
+        var today = this.state.today,
+            start = _utilsDateJs.getTime(today.start),
+            holiday = !today.workingHour,
+            full = today.workingHour >= 8,
+            worked = today.getWorkedTime(),
+            overtime = worked - 480,
+            light = today.getTrafficLight(),
             info = this.state.info;
 
         tick = !tick;
@@ -31355,7 +31355,7 @@ var Dashboard = _react2['default'].createClass({
                             _react2['default'].createElement(
                                 'div',
                                 null,
-                                '4 Hour'
+                                '4h Worked'
                             ),
                             _react2['default'].createElement(
                                 'div',
@@ -31369,7 +31369,7 @@ var Dashboard = _react2['default'].createClass({
                             _react2['default'].createElement(
                                 'div',
                                 null,
-                                '6 Hour'
+                                '6h Worked'
                             ),
                             _react2['default'].createElement(
                                 'div',
@@ -31383,7 +31383,7 @@ var Dashboard = _react2['default'].createClass({
                             _react2['default'].createElement(
                                 'div',
                                 null,
-                                '8 Hour'
+                                '8h Worked'
                             ),
                             _react2['default'].createElement(
                                 'div',
@@ -31399,7 +31399,7 @@ var Dashboard = _react2['default'].createClass({
                         )
                     )
                 );
-            } else if (overtime >= 0) {
+            } else if (overtime >= 0 && full) {
                 return _react2['default'].createElement(
                     'div',
                     { className: 'info' },
@@ -31412,21 +31412,7 @@ var Dashboard = _react2['default'].createClass({
                             _react2['default'].createElement(
                                 'div',
                                 null,
-                                'Work Start'
-                            ),
-                            _react2['default'].createElement(
-                                'div',
-                                null,
-                                _utilsDateJs.getTimeString(start + 9 * 60)
-                            )
-                        ),
-                        _react2['default'].createElement(
-                            'div',
-                            { className: 'section' },
-                            _react2['default'].createElement(
-                                'div',
-                                null,
-                                'Over 2 Hour'
+                                'Over 2h'
                             ),
                             _react2['default'].createElement(
                                 'div',
@@ -31440,7 +31426,7 @@ var Dashboard = _react2['default'].createClass({
                             _react2['default'].createElement(
                                 'div',
                                 null,
-                                'Over 4 Hour'
+                                'Over 4h'
                             ),
                             _react2['default'].createElement(
                                 'div',
@@ -31454,13 +31440,19 @@ var Dashboard = _react2['default'].createClass({
                             _react2['default'].createElement(
                                 'div',
                                 null,
-                                'Over 6 Hour'
+                                'Over 6h'
                             ),
                             _react2['default'].createElement(
                                 'div',
                                 null,
                                 _utilsDateJs.getTimeString(start + 15 * 60)
                             )
+                        ),
+                        _react2['default'].createElement(
+                            'div',
+                            { className: 'section' },
+                            _react2['default'].createElement('div', null),
+                            _react2['default'].createElement('div', null)
                         )
                     )
                 );
@@ -31556,7 +31548,7 @@ var Dashboard = _react2['default'].createClass({
                         null,
                         _react2['default'].createElement(
                             'span',
-                            { className: this.state.light },
+                            { className: light },
                             '●'
                         ),
                         ' Today'
@@ -31564,12 +31556,12 @@ var Dashboard = _react2['default'].createClass({
                     _react2['default'].createElement(
                         'div',
                         { className: 'clk', onClick: this.info, onTouchStart: this.info },
-                        getRunningTime(today)
+                        getRunningTime(worked)
                     ),
                     _react2['default'].createElement(
                         'div',
                         null,
-                        overtime >= 0 ? '+' + getRunningTime(overtime) : ' '
+                        overtime >= 0 ? '+ ' + getRunningTime(overtime) : ' '
                     )
                 )
             ),

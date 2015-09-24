@@ -20,10 +20,7 @@ function getData() {
         total: total,
         fulltime: fulltime,
         remain: Math.max(fulltime - total, 0),
-        holiday: !today.workingHour,
-        today: today.getWorkedTime(),
-        start: getTime(today.start),
-        light: today.getTrafficLight()
+        today: today
     };
 }
 
@@ -77,10 +74,13 @@ var Dashboard = React.createClass({
     },
     render() {
 
-        var start = this.state.start,
-            holiday = this.state.holiday,
-            today = this.state.today,
-            overtime = today - 480,
+        var today = this.state.today,
+            start = getTime(today.start),
+            holiday = !today.workingHour,
+            full = today.workingHour >= 8,
+            worked = today.getWorkedTime(),
+            overtime = worked - 480,
+            light = today.getTrafficLight(),
             info = this.state.info;
 
         tick = !tick;
@@ -92,15 +92,15 @@ var Dashboard = React.createClass({
                     <div className="info">
                         <div className={info}>
                             <div className="section">
-                                <div>4 Hour</div>
+                                <div>4h Worked</div>
                                 <div>{getTimeString(start + (4 * 60))}</div>
                             </div>
                             <div className="section">
-                                <div>6 Hour</div>
+                                <div>6h Worked</div>
                                 <div>{getTimeString(start + (6 * 60))}</div>
                             </div>
                             <div className="section">
-                                <div>8 Hour</div>
+                                <div>8h Worked</div>
                                 <div>{getTimeString(start + (8 * 60))}</div>
                             </div>
                             <div className="section">
@@ -110,25 +110,25 @@ var Dashboard = React.createClass({
                         </div>
                     </div>
                 );
-            } else if (overtime >= 0) {
+            } else if (overtime >= 0 && full) {
                 return (
                     <div className="info">
                         <div className={info}>
                             <div className="section">
-                                <div>Work Start</div>
-                                <div>{getTimeString(start + (9 * 60))}</div>
-                            </div>
-                            <div className="section">
-                                <div>Over 2 Hour</div>
+                                <div>Over 2h</div>
                                 <div>{getTimeString(start + (11 * 60))}</div>
                             </div>
                             <div className="section">
-                                <div>Over 4 Hour</div>
+                                <div>Over 4h</div>
                                 <div>{getTimeString(start + (13 * 60))}</div>
                             </div>
                             <div className="section">
-                                <div>Over 6 Hour</div>
+                                <div>Over 6h</div>
                                 <div>{getTimeString(start + (15 * 60))}</div>
+                            </div>
+                            <div className="section">
+                                <div></div>
+                                <div></div>
                             </div>
                         </div>
                     </div>
@@ -166,9 +166,9 @@ var Dashboard = React.createClass({
 
                 <div className="main">
                     <div className="big">
-                        <div><span className={this.state.light}>●</span> Today</div>
-                        <div className="clk" onClick={this.info} onTouchStart={this.info}>{getRunningTime(today)}</div>
-                        <div>{(overtime >= 0) ? '+' + getRunningTime(overtime) : ' '}</div>
+                        <div><span className={light}>●</span> Today</div>
+                        <div className="clk" onClick={this.info} onTouchStart={this.info}>{getRunningTime(worked)}</div>
+                        <div>{(overtime >= 0) ? '+ ' + getRunningTime(overtime) : ' '}</div>
                     </div>
                 </div>
                 <div className="board">
