@@ -80,6 +80,7 @@ var Dashboard = React.createClass({
         var start = this.state.start,
             holiday = this.state.holiday,
             today = this.state.today,
+            overtime = today - 480,
             info = this.state.info;
 
         tick = !tick;
@@ -109,10 +110,14 @@ var Dashboard = React.createClass({
                         </div>
                     </div>
                 );
-            } else if (today >= 480) {
+            } else if (overtime >= 0) {
                 return (
                     <div className="info">
                         <div className={info}>
+                            <div className="section">
+                                <div>Work Start</div>
+                                <div>{getTimeString(start + (9 * 60))}</div>
+                            </div>
                             <div className="section">
                                 <div>Over 2 Hour</div>
                                 <div>{getTimeString(start + (11 * 60))}</div>
@@ -124,10 +129,6 @@ var Dashboard = React.createClass({
                             <div className="section">
                                 <div>Over 6 Hour</div>
                                 <div>{getTimeString(start + (15 * 60))}</div>
-                            </div>
-                            <div className="section">
-                                <div></div>
-                                <div></div>
                             </div>
                         </div>
                     </div>
@@ -167,6 +168,7 @@ var Dashboard = React.createClass({
                     <div className="big">
                         <div><span className={this.state.light}>●</span> Today</div>
                         <div className="clk" onClick={this.info} onTouchStart={this.info}>{getRunningTime(today)}</div>
+                        <div>{(overtime >= 0) ? '+' + getRunningTime(overtime) : ' '}</div>
                     </div>
                 </div>
                 <div className="board">

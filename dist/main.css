@@ -49,10 +49,12 @@ div.record {
 
 div.dashboard > div.main {
     width: 50%;
+    height: 114px;
 }
 
 div.dashboard > div.board {
     width: 50%;
+    height: 114px;
     vertical-align: middle;
 }
 
@@ -82,6 +84,7 @@ div.dashboard div.time > div:nth-child(2) {
 
 div.dashboard div.big {
     width: 100%;
+    height: 100%;
     padding: 5px;
     vertical-align: middle;
 }
@@ -98,6 +101,13 @@ div.dashboard div.big > div:nth-child(1) {
 
 div.dashboard div.big > div:nth-child(2) {
     font-size: 3em;
+}
+
+div.dashboard div.big > div:nth-child(3) {
+    font-size: 1.2em;
+    position: relative;
+    top: -15px;
+    padding: 4px;
 }
 
 div.dashboard div.big span.green {
