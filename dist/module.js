@@ -31561,7 +31561,7 @@ var Dashboard = _react2['default'].createClass({
                     _react2['default'].createElement(
                         'div',
                         null,
-                        overtime >= 0 ? '+ ' + getRunningTime(overtime) : ' '
+                        overtime >= 0 && full ? '+ ' + getRunningTime(overtime) : ' '
                     )
                 )
             ),

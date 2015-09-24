@@ -168,7 +168,7 @@ var Dashboard = React.createClass({
                     <div className="big">
                         <div><span className={light}>●</span> Today</div>
                         <div className="clk" onClick={this.info} onTouchStart={this.info}>{getRunningTime(worked)}</div>
-                        <div>{(overtime >= 0) ? '+ ' + getRunningTime(overtime) : ' '}</div>
+                        <div>{(overtime >= 0 && full) ? '+ ' + getRunningTime(overtime) : ' '}</div>
                     </div>
                 </div>
                 <div className="board">
