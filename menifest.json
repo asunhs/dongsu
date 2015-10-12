@@ -1,0 +1,16 @@
+{
+  "short_name": "Dongsu",
+  "name": "Dongsu",
+  "icons": [
+    {
+      "src": "dist/img/dongsu_sm.png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "dist/img/dongsu_lg.png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone"
+}
