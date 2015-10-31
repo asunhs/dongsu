@@ -32000,7 +32000,9 @@ var Day = (function () {
             return diff;
         }
 
-        if (diff >= 480) {
+        if (diff >= 780) {
+            return 720;
+        } else if (diff >= 480) {
             return diff - 60;
         } else if (diff >= 270) {
             return diff - 30;
